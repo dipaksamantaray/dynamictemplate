@@ -1,7 +1,7 @@
 <x-app-layout>
 
     <!-- page title area start -->
-    <div class="page-title-area">
+    {{-- <div class="page-title-area">
         <div class="row items-center">
             <div class="col-sm-6">
                 <div class="breadcrumbs-area clearfix">
@@ -12,6 +12,21 @@
                         <li><span>{{ __('Create Admin') }}</span></li>
                     </ul>
                 </div>
+            </div>
+        </div>
+    </div> --}}
+
+    <div class="bg-gray-100 p-4 rounded-lg">
+        <div class="flex justify-between items-center">
+            <div>
+                <h1 class="text-xl font-bold text-gray-800">Admin Create</h1>
+                <nav class="text-sm breadcrumbs">
+                    <ul>
+                        <li><a href="{{ route('admin.dashboard') }}" class="text-blue-500">Dashboard</a></li>
+                        <li><a href="{{ route('admin.admins.index') }}" class="text-blue-500">All Admins</a></li>
+                        {{-- <li class="text-gray-600">Edit Admin - {{ $admin->name }}</li> --}}
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>

@@ -3,13 +3,17 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DataFeedController;
 use App\Http\Controllers\DashboardController;
-
+use App\Livewire\PermissionManagement;
+use App\Livewire\PermissionManagementCreate;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Livewire\RoleCreate;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\AdminsController;
+use App\Http\Controllers\PermissionController;
+
+
 
 
 
@@ -25,9 +29,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     })->name('logout');
     Route::view('profile', 'profile')->name('profile');
     Route::resource('roles', RolesController::class);
+    Route::get('permissions', PermissionManagement::class)->name('permissions');
+    Route::get('/permissions/create', PermissionManagementCreate::class)->name('permissions.create');
+
     Route::resource('admins', AdminsController::class);
     Route::get('import', [CustomerController::class, 'import'])->name('customers.import');
-Route::get('export', [CustomerController::class, 'export'])->name('customers.export');
+    Route::get('export', [CustomerController::class, 'export'])->name('customers.export');
 
 })->middleware(['auth', 'verified']);
 // for data table

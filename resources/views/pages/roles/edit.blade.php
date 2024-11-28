@@ -18,23 +18,24 @@ Role Edit - Admin Panel
 <x-app-layout>
 
 <!-- page title area start -->
-<div class="page-title-area">
-    <div class="row align-items-center">
-        <div class="col-sm-6">
-            <div class="breadcrumbs-area clearfix">
-                <h4 class="page-title pull-left">Role Edit - {{ $role->name }}</h4>
-                <ul class="breadcrumbs pull-left">
-                    <li><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                    <li><a href="{{ route('admin.roles.index') }}">All Roles</a></li>
-                    <li><span>Edit Role</span></li>
+
+
+<div class="bg-gray-100 p-4 rounded-lg">
+    <div class="flex justify-between items-center">
+        <div>
+            <h1 class="text-xl font-bold text-gray-800">Role Edit</h1>
+            <nav class="text-sm breadcrumbs">
+                <ul>
+                    <li><a href="{{ route('admin.dashboard') }}" class="text-blue-500">Dashboard</a></li>
+                    <li><a href="{{ route('admin.admins.index') }}" class="text-blue-500">All Admins</a></li>
+                    {{-- <li class="text-gray-600">Edit Admin - {{ $admin->name }}</li> --}}
                 </ul>
-            </div>
-        </div>
-        <div class="col-sm-6 clearfix">
-            {{-- @include('backend.layouts.partials.logout') --}}
+            </nav>
         </div>
     </div>
 </div>
+
+
 <!-- page title area end -->
 
 <div class="main-content-inner">

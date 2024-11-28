@@ -1,112 +1,96 @@
-
-{{-- @extends('backend.layouts.master') --}}
-
-{{-- @section('title')
-Admin Edit - Admin Panel
-@endsection --}}
-
-{{-- @section('styles')
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-
-<style>
-    .form-check-label {
-        text-transform: capitalize;
-    }
-</style>
-@endsection --}}
-
-{{-- @section('admin-content') --}}
 <x-app-layout>
-
-
-<!-- page title area start -->
-<div class="page-title-area">
-    <div class="row align-items-center">
-        <div class="col-sm-6">
-            <div class="breadcrumbs-area clearfix">
-                <h4 class="page-title pull-left">Admin Edit</h4>
-                <ul class="breadcrumbs pull-left">
-                    <li><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                    <li><a href="{{ route('admin.admins.index') }}">All Admins</a></li>
-                    <li><span>Edit Admin - {{ $admin->name }}</span></li>
-                </ul>
+    <!-- Page title area start -->
+    <div class="bg-gray-100 p-4 rounded-lg">
+        <div class="flex justify-between items-center">
+            <div>
+                <h1 class="text-xl font-bold text-gray-800">Admin Edit</h1>
+                <nav class="text-sm breadcrumbs">
+                    <ul>
+                        <li><a href="{{ route('admin.dashboard') }}" class="text-blue-500">Dashboard</a></li>
+                        <li><a href="{{ route('admin.admins.index') }}" class="text-blue-500">All Admins</a></li>
+                        <li class="text-gray-600">Edit Admin - {{ $admin->name }}</li>
+                    </ul>
+                </nav>
             </div>
         </div>
-        <div class="col-sm-6 clearfix">
-            @include('backend.layouts.partials.logout')
-        </div>
     </div>
-</div>
-<!-- page title area end -->
+    <!-- Page title area end -->
 
-<div class="main-content-inner">
-    <div class="row">
-        <!-- data table start -->
-        <div class="col-12 mt-5">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="header-title">Edit Admin - {{ $admin->name }}</h4>
-                    @include('backend.layouts.partials.messages')
+    <!-- Main content -->
+    <div class="main-content-inner mt-5">
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow-lg">
+                    <div class="card-body">
+                        <h2 class="text-lg font-semibold mb-4">Edit Admin - {{ $admin->name }}</h2>
 
-                    <form action="{{ route('admin.admins.update', $admin->id) }}" method="POST">
-                        @method('PUT')
-                        @csrf
-                        <div class="form-row">
-                            <div class="form-group col-md-6 col-sm-12">
-                                <label for="name">Admin Name</label>
-                                <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" value="{{ $admin->name }}" required autofocus>
-                            </div>
-                            <div class="form-group col-md-6 col-sm-12">
-                                <label for="email">Admin Email</label>
-                                <input type="text" class="form-control" id="email" name="email" placeholder="Enter Email" value="{{ $admin->email }}" required>
-                            </div>
-                        </div>
+                        <form action="{{ route('admin.admins.update', $admin->id) }}" method="POST" class="space-y-4">
+                            @method('PUT')
+                            @csrf
 
-                        <div class="form-row">
-                            <div class="form-group col-md-6 col-sm-12">
-                                <label for="password">Password (Optional)</label>
-                                <input type="password" class="form-control" id="password" name="password" placeholder="Enter Password">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="name" class="block text-sm font-medium text-gray-700">Admin Name</label>
+                                    <input type="text" id="name" name="name" placeholder="Enter Name" class="input input-bordered w-full" value="{{ $admin->name }}" required autofocus>
+                                </div>
+                                <div>
+                                    <label for="email" class="block text-sm font-medium text-gray-700">Admin Email</label>
+                                    <input type="email" id="email" name="email" placeholder="Enter Email" class="input input-bordered w-full" value="{{ $admin->email }}" required>
+                                </div>
                             </div>
-                            <div class="form-group col-md-6 col-sm-12">
-                                <label for="password_confirmation">Confirm Password (Optional)</label>
-                                <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Enter Password">
-                            </div>
-                        </div>
 
-                        <div class="form-row">
-                            <div class="form-group col-md-6 col-sm-6">
-                                <label for="password">Assign Roles</label>
-                                <select name="roles[]" id="roles" class="form-control select2" multiple required>
-                                    @foreach ($roles as $role)
-                                        <option value="{{ $role->name }}" {{ $admin->hasRole($role->name) ? 'selected' : '' }}>{{ $role->name }}</option>
-                                    @endforeach
-                                </select>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="password" class="block text-sm font-medium text-gray-700">Password (Optional)</label>
+                                    <input type="password" id="password" name="password" placeholder="Enter Password" class="input input-bordered w-full">
+                                </div>
+                                <div>
+                                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Confirm Password (Optional)</label>
+                                    <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Enter Password" class="input input-bordered w-full">
+                                </div>
                             </div>
-                            <div class="form-group col-md-6 col-sm-6">
-                                <label for="username">Admin Username</label>
-                                <input type="text" class="form-control" id="username" name="username" placeholder="Enter Username" required value="{{ $admin->username }}">
-                            </div>
-                        </div>
 
-                        <button type="submit" class="btn btn-primary mt-4 pr-4 pl-4">Save</button>
-                        <a href="{{ route('admin.admins.index') }}" class="btn btn-secondary mt-4 pr-4 pl-4">Cancel</a>
-                    </form>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="roles" class="block text-sm font-medium text-gray-700">Assign Roles</label>
+                                    <select name="roles[]" id="roles" class="select select-bordered w-full" required>
+                                        @foreach ($roles as $role)
+                                            <option value="{{ $role->name }}" 
+                                                @if($admin->hasRole($role->name)) 
+                                                    selected 
+                                                @endif>
+                                                {{ $role->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="username" class="block text-sm font-medium text-gray-700">Admin Username</label>
+                                    <input type="text" id="username" name="username" placeholder="Enter Username" class="input input-bordered w-full" value="{{ $admin->username }}" required>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center space-x-4">
+                                <button type="submit" class="btn btn-primary">Save</button>
+                                <a href="{{ route('admin.admins.index') }}" class="btn btn-secondary">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-        <!-- data table end -->
-
     </div>
-</div>
+
+    <!-- Optional JavaScript for DaisyUI Dropdown -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const selectElement = document.getElementById('roles');
+            selectElement.addEventListener('focus', function () {
+                this.classList.add('focus:ring', 'focus:ring-blue-300');
+            });
+            selectElement.addEventListener('blur', function () {
+                this.classList.remove('focus:ring', 'focus:ring-blue-300');
+            });
+        });
+    </script>
 </x-app-layout>
-
-{{-- @endsection --}}
-
-{{-- @section('scripts') --}}
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $('.select2').select2();
-    })
-</script>
-{{-- @endsection --}}

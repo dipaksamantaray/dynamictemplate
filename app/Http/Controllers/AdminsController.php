@@ -80,7 +80,7 @@ class AdminsController extends Controller
     {
         $this->checkAuthorization(auth()->user(), ['admin.edit']);
 
-        $admin = Admin::findOrFail($id);
+        $admin = User::findOrFail($id);
         return view('pages.roles.admin.edit', [
             'admin' => $admin,
             'roles' => Role::all(),
@@ -90,7 +90,7 @@ class AdminsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(AdminRequest $request, int $id): RedirectResponse
+    public function update(Request $request, int $id): RedirectResponse
     {
         $this->checkAuthorization(auth()->user(), ['admin.edit']);
 

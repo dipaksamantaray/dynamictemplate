@@ -5,6 +5,7 @@ use App\Http\Controllers\DataFeedController;
 use App\Http\Controllers\DashboardController;
 use App\Livewire\PermissionManagement;
 use App\Livewire\PermissionManagementCreate;
+use App\Livewire\PermissionManagementEdit;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Livewire\RoleCreate;
 use App\Http\Controllers\UserController;
@@ -31,6 +32,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::resource('roles', RolesController::class);
     Route::get('permissions', PermissionManagement::class)->name('permissions');
     Route::get('/permissions/create', PermissionManagementCreate::class)->name('permissions.create');
+    Route::get('permissions/{permission}/edit', PermissionManagementEdit::class)->name('permissions.edit');
+
 
     Route::resource('admins', AdminsController::class);
     Route::get('import', [CustomerController::class, 'import'])->name('customers.import');

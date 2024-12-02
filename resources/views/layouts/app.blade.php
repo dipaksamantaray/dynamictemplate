@@ -7,19 +7,28 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
         @livewireStyles 
+        <style>
+           
+             
+            .fl-flasher{
+                margin-top:30px !important;
+            }
 
+            .fl-wrapper[data-position^=top-] {
+                margin-top:30px !important;
+}
+        </style>
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&display=swap" rel="stylesheet" />
-        {{-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"> --}}
         <link  href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
        {{-- for toast --}}
-       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+
         <script>
             if (localStorage.getItem('dark-mode') === 'false' || !('dark-mode' in localStorage)) {
                 document.querySelector('html').classList.remove('dark');
@@ -37,9 +46,8 @@
             }
         </script>
          <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
-        <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-        {{-- for toast --}}
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+        
+        
 
         
     </head>
@@ -52,12 +60,10 @@
 
    
 
-    <!-- Page wrapper -->
     <div class="flex h-[100dvh] overflow-hidden">
 
         <x-app.sidebar :variant="$attributes['sidebarVariant']" />
 
-        <!-- Content area -->
         <div class="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden @if($attributes['background']){{ $attributes['background'] }}@endif" x-ref="contentarea">
 
             <x-app.header :variant="$attributes['headerVariant']" />
@@ -69,7 +75,9 @@
         </div>
 
     </div>
-
+    {{-- for toast --}}
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     @livewireScriptConfig
+   
 </body>
 </html>

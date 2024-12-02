@@ -3,11 +3,22 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Spatie\Permission\Models\Permission as SpatiePermission;
+use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log;
+use App\Models\User;
+use App\Http\Requests\RoleRequest;
+use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Hash;
+use App\Traits\AuthorizationChecker;
+use Auth;
+
 // use App\Traits\AuthorizationChecker;
 
 class PermissionManagementCreate extends Component
 {
-    // use AuthorizationChecker;
+    use AuthorizationChecker;
 
     public $permissionName;
     public $guardName = 'web';
@@ -20,7 +31,7 @@ class PermissionManagementCreate extends Component
 
     public function createPermission()
     {
-        // $this->checkAuthorization(auth()->user(), ['permission.create']); 
+        $this->checkAuthorization(auth()->user(), ['role.create']);
 
         $this->validate([
             'permissionName' => 'required|unique:permissions,name',
@@ -33,8 +44,9 @@ class PermissionManagementCreate extends Component
             'group_name' => $this->groupName,
         ]);
 
-        session()->flash('message', 'Permission created successfully!');
+        flash()->success('Permission Create successfully.');
 
-        return redirect()->route('admin.permissions'); // Redirect back to the list after creation
+
+        return redirect()->route('admin.permissions');
     }
 }

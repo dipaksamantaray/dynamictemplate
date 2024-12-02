@@ -212,9 +212,9 @@ $usr = Auth::guard('web')->user();
                     <span class="lg:hidden lg:sidebar-expanded:block 2xl:block">More</span>
                 </h3>
                 <ul class="mt-3">
-                    <!-- Authentication -->
+                    <!-- Authentication --> 
 
-                    @if ($usr->can('role.create') || $usr->can('role.view') ||  $usr->can('role.edit') ||  $usr->can('role.delete'))
+                    {{-- @if ($usr->can('role.create') || $usr->can('role.view') ||  $usr->can('role.edit') ||  $usr->can('role.delete'))
 
                     <li class="pl-4 pr-3 py-2 rounded-lg mb-0.5 last:mb-0" x-data="{ open: false }">
                         <a class="block text-gray-800 dark:text-gray-100 truncate transition" :class="open ? '' : 'hover:text-gray-900 dark:hover:text-white'" href="#0" @click.prevent="open = !open; sidebarExpanded = true">
@@ -248,11 +248,82 @@ $usr = Auth::guard('web')->user();
                                 <li class="{{ Route::is('admin.roles.create')  ? 'active' : '' }} mt-1"><a href="{{ route('admin.roles.create') }}">Create Role</a></li>
                             @endif
                         </ul>
+                        
                                 </li>
                             </ul>
                         </div>
                     </li>
-                    @endif
+                    @endif --}}
+                    {{-- new role and permission --}}
+                    @if ($usr->can('role.create') || $usr->can('role.view') ||  $usr->can('role.edit') ||  $usr->can('role.delete'))
+                    <li class="pl-4 pr-3 py-2 rounded-lg mb-0.5 last:mb-0" x-data="{ open: false }">
+                        <a class="block text-gray-800 dark:text-gray-100 truncate transition" 
+                           :class="open ? '' : 'hover:text-gray-900 dark:hover:text-white'" 
+                           href="#0" 
+                           @click.prevent="open = !open; sidebarExpanded = true">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <svg class="shrink-0 fill-current text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                                        <path d="M11.442 4.576a1 1 0 1 0-1.634-1.152L4.22 11.35 1.773 8.366A1 1 0 1 0 .227 9.634l3.281 4a1 1 0 0 0 1.59-.058l6.344-9ZM15.817 4.576a1 1 0 1 0-1.634-1.152l-5.609 7.957a1 1 0 0 0-1.347 1.453l.656.8a1 1 0 0 0 1.59-.058l6.344-9Z" />
+                                    </svg>
+                                    <span class="text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">Role & Permission</span>
+                                </div>
+                                <!-- Icon -->
+                                <div class="flex shrink-0 ml-2 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                                    <svg class="w-3 h-3 shrink-0 ml-1 fill-current text-gray-400 dark:text-gray-500" :class="{ 'rotate-180': open }" viewBox="0 0 12 12">
+                                        <path d="M5.9 11.4L.5 6l1.4-1.4 4 4 4-4L11.3 6z" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="lg:hidden lg:sidebar-expanded:block 2xl:block">
+                            <ul class="pl-8 mt-1" :class="{ 'hidden': !open }" x-cloak>
+                                <li class="mb-1 last:mb-0">
+                                    <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-tasks"></i></a>
+                                    <ul {{ Route::is('admin.roles.create') || Route::is('admin.roles.index') || Route::is('admin.roles.edit') || Route::is('admin.roles.show') ? 'in' : '' }}">
+                                        @if ($usr->can('role.view'))
+                                            <li class="{{ Route::is('admin.roles.index')  || Route::is('admin.roles.edit') ? 'active' : '' }}">
+                                                <a href="{{ route('admin.roles.index') }}">All Roles</a>
+                                            </li>
+                                        @endif
+                                        @if ($usr->can('role.create'))
+                                            <li class="{{ Route::is('admin.roles.create')  ? 'active' : '' }} mt-1">
+                                                <a href="{{ route('admin.roles.create') }}">Create Role</a>
+                                            </li>
+                                        @endif
+                                    </ul>
+                                </li>
+                
+                                <!-- Add Permissions Menu Here -->
+                                @if ($usr->can('role.view') || $usr->can('role.create') || $usr->can('role.edit')|| $usr->can('role.deletePermission'))
+                                    <li class="mb-1 last:mb-0">
+                                        <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-tasks"></i></a>
+                                        <ul {{ Route::is('admin.permissions.create') || Route::is('admin.permissions') || Route::is('admin.permissions.edit') || Route::is('admin.permissions.show') ? 'in' : '' }}">
+                                            @if ($usr->can('role.view'))
+                                                <li class="{{ Route::is('admin.permissions')  || Route::is('admin.permissions.edit') ? 'active' : '' }}">
+                                                    <a href="{{ route('admin.permissions') }}">All Permissions</a>
+                                                </li>
+                                            @endif
+                                            @if ($usr->can('role.create'))
+                                                <li class="{{ Route::is('admin.permissions.create')  ? 'active' : '' }} mt-1">
+                                                    <a href="{{ route('admin.permissions.create') }}">Create Permission</a>
+                                                </li>
+                                            @endif
+                                            @if ($usr->can('permission.deletePermission'))
+                                                <li class="{{ Route::is('admin.permissions.deletePermission')  ? 'active' : '' }} mt-1">
+                                                    <a href="{{ route('admin.permissions.deletePermission') }}">Delete Permission</a>
+                                                </li>
+                                            @endif
+                                        </ul>
+                                    </li>
+                                @endif
+                
+                            </ul>
+                        </div>
+                    </li>
+                @endif
+                
+                    {{-- end new role and permission --}}
 
 
                     {{-- for admin --}}
@@ -298,8 +369,7 @@ $usr = Auth::guard('web')->user();
                         </div>
                     </li>
                     @endif
-                   
-                    
+
                 </ul>
             </div>
         </div>

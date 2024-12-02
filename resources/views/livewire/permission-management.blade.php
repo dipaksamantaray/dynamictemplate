@@ -1,5 +1,4 @@
 <div class="p-6">
-    <!-- Header with Plus Icon Button -->
     <div class="flex justify-between items-center">
         <h1 class="text-2xl font-bold">Permission Management</h1>
         <a href="{{ route('admin.permissions.create') }}" class="btn btn-primary rounded-full">
@@ -7,13 +6,12 @@
         </a>
     </div>
 
-    @if(session()->has('message'))
+    {{-- @if(session()->has('message'))
         <div class="alert alert-success my-4">
             {{ session('message') }}
         </div>
-    @endif
+    @endif --}}
 
-    <!-- List of Permissions -->
     <div class="mt-6 bg-white p-6 rounded-xl shadow-md">
         <table id="permissionsTable" class="table-auto w-full">
             <thead>
@@ -31,7 +29,7 @@
                         <td class="px-4 py-2">{{ $permission->guard_name }}</td>
                         <td class="px-4 py-2">{{ $permission->group_name ?? 'N/A' }}</td>
                         <td class="px-4 py-2">
-                            <button wire:click="editPermission({{ $permission->id }})" class="btn btn-sm btn-secondary">Edit</button>
+                            <a href="{{ route('admin.permissions.edit', ['permission' => $permission->id]) }}" class="btn btn-sm btn-primary">Edit</a>
                             <button wire:click="deletePermission({{ $permission->id }})" class="btn btn-sm btn-error">Delete</button>
                         </td>
                     </tr>

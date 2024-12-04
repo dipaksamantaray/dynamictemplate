@@ -23,7 +23,16 @@ class PermissionManagementCreate extends Component
     public $permissionName;
     public $guardName = 'web';
     public $groupName;
-
+    protected $rules = [
+        'permissionName' => 'required|string|unique:permissions,name',
+        'guardName' => 'required|string|max:255',
+        'groupName' => 'required|string|max:255',
+    ];
+    
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
     public function render()
     {
         return view('livewire.permission-management-create')->layout('layouts.app');
@@ -33,10 +42,7 @@ class PermissionManagementCreate extends Component
     {
         $this->checkAuthorization(auth()->user(), ['role.create']);
 
-        $this->validate([
-            'permissionName' => 'required|unique:permissions,name',
-            'groupName' => 'nullable|string|max:255',
-        ]);
+        $this->validate();
 
         SpatiePermission::create([
             'name' => $this->permissionName,

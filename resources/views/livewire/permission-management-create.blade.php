@@ -5,7 +5,7 @@
         <form wire:submit.prevent="createPermission">
             <div class="mb-4">
                 <label for="permissionName" class="block text-sm font-medium">Permission Name</label>
-                <input type="text" id="permissionName" wire:model="permissionName" class="input input-bordered w-full" />
+                <input type="text" id="permissionName" wire:model.blur="permissionName" class="input input-bordered w-full" />
                 @error('permissionName') 
                     <span class="text-red-500 text-sm">{{ $message }}</span> 
                 @enderror
@@ -13,7 +13,7 @@
 
             <div class="mb-4">
                 <label for="guardName" class="block text-sm font-medium">Guard Name</label>
-                <input type="text" id="guardName" wire:model="guardName" class="input input-bordered w-full" />
+                <input type="text" id="guardName" wire:model.blur="guardName" class="input input-bordered w-full" />
                 @error('guardName') 
                     <span class="text-red-500 text-sm">{{ $message }}</span> 
                 @enderror
@@ -21,7 +21,7 @@
 
             <div class="mb-4">
                 <label for="groupName" class="block text-sm font-medium">Group Name</label>
-                <input type="text" id="groupName" wire:model="groupName" class="input input-bordered w-full" />
+                <input type="text" id="groupName" wire:model.blur="groupName" class="input input-bordered w-full" />
                 @error('groupName') 
                     <span class="text-red-500 text-sm">{{ $message }}</span> 
                 @enderror

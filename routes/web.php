@@ -6,6 +6,9 @@ use App\Http\Controllers\DashboardController;
 use App\Livewire\PermissionManagement;
 use App\Livewire\PermissionManagementCreate;
 use App\Livewire\PermissionManagementEdit;
+use App\Livewire\AdminsIndex;
+use App\Livewire\AdminsCreate;
+use App\Livewire\AdminsEdit;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Livewire\RoleCreate;
 use App\Http\Controllers\UserController;
@@ -29,24 +32,32 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         return redirect('/login'); 
     })->name('logout');
     Route::view('profile', 'profile')->name('profile');
+    // for role resource
     Route::resource('roles', RolesController::class);
+    // for permission livewire
     Route::get('permissions', PermissionManagement::class)->name('permissions');
     Route::get('/permissions/create', PermissionManagementCreate::class)->name('permissions.create');
     Route::get('permissions/{permission}/edit', PermissionManagementEdit::class)->name('permissions.edit');
-
-
-    Route::resource('admins', AdminsController::class);
-    Route::get('import', [CustomerController::class, 'import'])->name('customers.import');
-    Route::get('export', [CustomerController::class, 'export'])->name('customers.export');
+    // for admin resource
+    // Route::resource('admins', AdminsController::class);
+    // route for admin live wire
+    Route::get('admins', AdminsIndex::class)->name('admins.index');
+    Route::get('admins/create', AdminsCreate::class)->name('admins.create');
+    Route::get('admins/{admin}/edit', AdminsEdit::class)->name('admins.edit');
+    
 
 })->middleware(['auth', 'verified']);
+
+// for chart(graph)
+Route::get('/json-data-feed', [DataFeedController::class, 'getDataFeed'])->name('json_data_feed');
+
+
+// for testing purpopse those routes are used
 // for data table
 Route::get('user', [UserController::class, 'create'])->name('user.view');
 Route::get('user/view', [UserController::class, 'index']);
 Route::get('user/{id}/edit', [UserController::class, 'edit'])->name('user.edit');
 Route::delete('user/{id}', [UserController::class, 'destroy'])->name('user.destroy');
-// for chart(graph)
-Route::get('/json-data-feed', [DataFeedController::class, 'getDataFeed'])->name('json_data_feed');
 // forcustomer to testing the form and data table through the daisy ui design
 Route::get('customers', [CustomerController::class, 'index'])->name('customers.index'); 
 Route::get('customers/view', [CustomerController::class, 'view'])->name('customers.view'); 

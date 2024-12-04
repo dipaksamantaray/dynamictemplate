@@ -40,7 +40,7 @@ class PermissionManagementEdit extends Component
 
         $this->validate([
             'permissionName' => 'required|unique:permissions,name,' . $this->permissionId,
-            'groupName' => 'nullable|string|max:255',
+            'groupName' => 'required|string|max:255',
         ]);
 
         $permission = SpatiePermission::find($this->permissionId);

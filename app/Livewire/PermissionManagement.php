@@ -6,11 +6,13 @@ use Spatie\Permission\Models\Permission as SpatiePermission;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
+use App\Exports\PermissionsExport;
 use App\Http\Requests\RoleRequest;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
+use Maatwebsite\Excel\Facades\Excel;
 
 use Auth;
 use App\Traits\AuthorizationChecker;
@@ -51,7 +53,10 @@ class PermissionManagement extends Component
         flash()->warning('Permission Delted successfully.');
         $this->permissions = SpatiePermission::all(); 
     }
-
+    public function exportCSV()
+    {
+        return Excel::download(new PermissionsExport, 'permission.csv', \Maatwebsite\Excel\Excel::CSV);
+    }
     private function resetForm()
     {
         $this->permissionName = '';

@@ -15,9 +15,8 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\AdminsExport;
 use App\Imports\AdminImport;
 use Livewire\WithFileUploads;
-// use Barryvdh\DomPDF\Facade as PDF;
-// use PDF;
-use Barryvdh\DomPDF\Facade\Pdf;
+use PDF;
+
 
 
 class AdminsIndex extends Component
@@ -43,61 +42,45 @@ class AdminsIndex extends Component
         return redirect()->route('admin.admins.index');
 
     }
-    // public function exportAdmins()
-    // {
-    //     return Excel::download(new AdminsExport, 'admins.xlsx');
-    // }
-   
-    // public function importAdmins()
-    // {
-    //     // Ensure file is uploaded
-    //     $this->validate([
-    //         'file' => 'required|mimes:xlsx,csv'
-    //     ]);
-
-    //     // Perform the import using Livewire's uploaded file property
-    //     Excel::import(new AdminImport, $this->file);
-
-    //     // Flash message to indicate success
-    //     session()->flash('message', 'Admins imported successfully!');
-
-    //     // Optionally redirect to another page
-    //     return redirect()->route('admin.admins.index');
-    // }
+    
     public function exportCSV()
     {
-        // Export admins as CSV
+        
         return Excel::download(new AdminsExport, 'admins.csv', \Maatwebsite\Excel\Excel::CSV);
     }
 
-
     public function exportPDF()
     {
-        $users = ["hello", "hii", "welcome"];
-    
-        // Ensure UTF-8 encoding for the data
+        // Get the data from the database or any static data
+        $users = User::with('roles')->get();
+        // dd( $users );
+
         $data = [
-            'title' => mb_convert_encoding('Welcome to ItSolutionStuff.com', 'UTF-8'),
+            'title' => 'Welcome to Admins Portal',
             'date' => date('m/d/Y'),
-            'users' => array_map(function($user) {
-                return mb_convert_encoding($user, 'UTF-8');
-            }, $users),
+            'users' => $users
         ];
-    
-        try {
-            // Generate the PDF with encoding options
-            $pdf = PDF::loadView('admins.pdf', $data)
-                      ->setOption('isHtml5ParserEnabled', true)
-                      ->setOption('isPhpEnabled', true)
-                      ->setOption('encoding', 'UTF-8');
-    
-            return $pdf->download('itsolutionstuff.pdf');
-        } catch (\Exception $e) {
-            // Handle the error gracefully
-            return response()->json(['error' => 'PDF generation failed: ' . $e->getMessage()]);
-        }
+
+        // Load the view and pass the data
+        $pdf = PDF::loadView('admins.pdf', $data);
+
+        // Generate the PDF and return the content (use output() here)
+        $pdfContent = $pdf->output();
+
+        // Return the response with a proper content type to trigger download
+        return response()->stream(
+            function() use ($pdfContent) {
+                echo $pdfContent;
+            },
+            200,
+            [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="admin.pdf"',
+            ]
+        );
     }
     
+   
     
     public function render()
     {

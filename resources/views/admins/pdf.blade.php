@@ -1,26 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Laravel 11 Generate PDF Example - ItSolutionStuff.com</title>
+    <title>Admin's PDF</title>
+   
 </head>
 <body>
     <h1>{{ $title }}</h1>
     <p>{{ $date }}</p>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-    tempor incididunt ut labore et dolore magna aliqua.</p>
+    <p>This is Your all the Admin's</p>
   
     <table class="table table-bordered">
         <tr>
             <th>ID</th>
             <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            
         </tr>
-        @foreach($users as $index => $user)
+        @foreach($users as $user)
         <tr>
-            <td>{{ $index + 1 }}</td>  <!-- Display index as ID -->
-            <td>{{ $user }}</td>       <!-- Display the string itself -->
+            <td>{{ $user->id }}</td>
+            <td>{{ $user->name }}</td>
+            <td>{{ $user->email }}</td>
+            <td>
+                @foreach ($user->roles as $role)
+                    <span class="badge badge-primary">{{ $role->name }}</span>
+                    {{-- {{dd($role->name)}} --}}
+                @endforeach
+            </td>
         </tr>
         @endforeach
     </table>
-
+  
 </body>
 </html>

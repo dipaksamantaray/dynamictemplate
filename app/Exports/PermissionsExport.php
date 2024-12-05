@@ -13,7 +13,7 @@ class PermissionsExport implements FromCollection, WithHeadings
     */
     public function collection()
     {
-        // Fetch all permissions
+        // dd(SpatiePermission::all());
         return SpatiePermission::all();
     }
 
@@ -25,10 +25,29 @@ class PermissionsExport implements FromCollection, WithHeadings
     public function headings(): array
     {
         return [
-            'id',
+            'Sl. No.',
             'Permission Name',
             'Guard Name',
             'Group Name',
+        ];
+    }
+
+    /**
+     * Map the data to be exported.
+     *
+     * @param  Spatie\Permission\Models\Permission as SpatiePermission $permission
+     * @return array
+     */
+    public function map( $permission): array
+    {
+        // Get the user's roles as a comma-separated string
+       
+
+        return [
+            $permission->id,                       // Sl. No.
+            $permission->name,                     // Name
+            $permission->guard_name,                    // Email
+            $permission->group_name,                    // Email
         ];
     }
 }

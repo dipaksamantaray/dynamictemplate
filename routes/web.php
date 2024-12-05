@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Livewire\PermissionManagement;
 use App\Livewire\PermissionManagementCreate;
 use App\Livewire\PermissionManagementEdit;
+use App\Livewire\Roles;
 use App\Livewire\AdminsIndex;
 use App\Livewire\AdminsCreate;
 use App\Livewire\AdminsEdit;
@@ -14,11 +15,6 @@ use App\Http\Livewire\RoleCreate;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\RolesController;
-use App\Http\Controllers\AdminsController;
-use App\Http\Controllers\PermissionController;
-
-
-
 
 
 Route::view('/', 'welcome');
@@ -34,12 +30,14 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::view('profile', 'profile')->name('profile');
     // for role resource
     Route::resource('roles', RolesController::class);
+    // for role live wire
+    Route::get('roles/create', [RolesController::class, 'create'])->name('roles.create');
+
+
     // for permission livewire
     Route::get('permissions', PermissionManagement::class)->name('permissions');
     Route::get('/permissions/create', PermissionManagementCreate::class)->name('permissions.create');
     Route::get('permissions/{permission}/edit', PermissionManagementEdit::class)->name('permissions.edit');
-    // for admin resource
-    // Route::resource('admins', AdminsController::class);
     // route for admin live wire
     Route::get('admins', AdminsIndex::class)->name('admins.index');
     Route::get('admins/create', AdminsCreate::class)->name('admins.create');
@@ -67,6 +65,4 @@ Route::delete('customers/{id}', [CustomerController::class, 'destroy'])->name('c
 Route::put('customers/{id}', [CustomerController::class, 'update'])->name('customers.update');
 
 // Route:get()
-
-
 require __DIR__.'/auth.php';

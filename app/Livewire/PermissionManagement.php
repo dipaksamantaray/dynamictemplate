@@ -13,7 +13,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 use Maatwebsite\Excel\Facades\Excel;
-
+use PDF;
 use Auth;
 use App\Traits\AuthorizationChecker;
 
@@ -57,10 +57,44 @@ class PermissionManagement extends Component
     {
         return Excel::download(new PermissionsExport, 'permission.csv', \Maatwebsite\Excel\Excel::CSV);
     }
+
+    // permission pdf
+
+
+    public function exportPDF()
+    {
+        // Get the data from the database or any static data
+        $permissions = SpatiePermission::get();
+        // dd( $permissions);
+
+        $data = [
+            'title' => 'Welcome to Permission Portal',
+            'date' => date('m/d/Y'),
+            'permissions' => $permissions
+        ];
+
+        // Load the view and pass the data
+        $pdf = PDF::loadView('admins.permissionpdf', $data);
+
+        // Generate the PDF and return the content (use output() here)
+        $pdfContent = $pdf->output();
+
+        // Return the response with a proper content type to trigger download
+        return response()->stream(
+            function() use ($pdfContent) {
+                echo $pdfContent;
+            },
+            200,
+            [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="permission.pdf"',
+            ]
+        );
+    }
     private function resetForm()
     {
         $this->permissionName = '';
-        $this->guardName = 'web'; // Reset guardName to default value
+        $this->guardName = 'web';
         $this->groupName = '';
         $this->permissionId = null;
         $this->isEditMode = false;

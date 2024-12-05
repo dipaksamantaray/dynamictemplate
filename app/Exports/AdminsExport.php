@@ -1,18 +1,20 @@
 <?php
+
 namespace App\Exports;
 
 use App\Models\User;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
 
-class AdminsExport implements FromCollection, WithHeadings
+class AdminsExport implements FromCollection, WithHeadings, WithMapping
 {
     /**
     * @return \Illuminate\Support\Collection
     */
     public function collection()
     {
-        return User::all();
+        return User::with('roles')->get();
     }
 
     /**
@@ -23,11 +25,29 @@ class AdminsExport implements FromCollection, WithHeadings
     public function headings(): array
     {
         return [
-            'ID',
+            'Sl. No.',
             'Name',
             'Email',
-            'Created At',
-            'Updated At',
+            'Role'
+        ];
+    }
+
+    /**
+     * Map the data to be exported.
+     *
+     * @param  \App\Models\User  $user
+     * @return array
+     */
+    public function map($user): array
+    {
+        // Get the user's roles as a comma-separated string
+        $roles = $user->roles->pluck('name')->implode(', ');
+
+        return [
+            $user->id,                       // Sl. No.
+            $user->name,                     // Name
+            $user->email,                    // Email
+            $roles                           // Role(s)
         ];
     }
 }

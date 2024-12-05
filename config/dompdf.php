@@ -2,6 +2,8 @@
 
 return [
 
+
+    'font_path' => storage_path('fonts/'),
     /*
     |--------------------------------------------------------------------------
     | Settings
@@ -178,7 +180,10 @@ return [
          *
          * @var string
          */
-        'default_font' => 'serif',
+        // 'default_font' => 'serif',
+
+        'default_font' => 'arial',
+
 
         /**
          * Image DPI setting

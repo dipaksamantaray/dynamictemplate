@@ -1,15 +1,29 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Admin's PDF</title>
-   
-</head>
+    <head>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+            table, th, td {
+                border: 1px solid black;
+            }
+            th, td {
+                padding: 8px;
+                text-align: left;
+            }
+        </style>
+    </head>
 <body>
     <h1>{{ $title }}</h1>
     <p>{{ $date }}</p>
-    <p>This is Your all the Admin's</p>
   
-    <table class="table table-bordered">
+    <table>
         <tr>
             <th>ID</th>
             <th>Name</th>

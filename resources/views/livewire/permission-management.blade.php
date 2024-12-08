@@ -32,7 +32,7 @@
 <div x-data="{ open: false }" class="relative inline-block text-left">
     <!-- Button to trigger the dropdown -->
     <button type="button" class="btn btn-accent" @click="open = !open">
-        {{ __('Export Admins') }}
+        {{ __('Export Permission') }}
     </button>
 
     <!-- Dropdown menu -->

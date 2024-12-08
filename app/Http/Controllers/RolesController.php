@@ -12,9 +12,12 @@ use Illuminate\Http\RedirectResponse;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Permission;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\RoleExport;
+
 use Illuminate\Http\Request;
 use App\Traits\AuthorizationChecker;
-
+use PDF;
 class RolesController extends Controller
 {
     use AuthorizationChecker; // Add this line
@@ -31,6 +34,7 @@ class RolesController extends Controller
             'roles' => Role::all(),
            
         ]);
+        // dd(Role::all());
     }
  
     public function create(): Renderable
@@ -44,8 +48,37 @@ class RolesController extends Controller
     }
 
 
+    public function exportCSV()
+{
+    return Excel::download(new RoleExport, 'roles.csv', \Maatwebsite\Excel\Excel::CSV);
+}
+public function exportPDF()
+{
+    // Get the roles from the database
+    $roles = Role::all();  // Fetch roles from the database
 
-  
+    // Prepare data to pass to the PDF view
+    $data = [
+        'title' => 'Roles List',
+        'date' => now()->format('m/d/Y'),
+        'roles' => $roles,  // Pass the roles data to the view
+    ];
+
+    // Load the view and pass data for rendering
+    $pdf = PDF::loadView('roles.pdf', $data);
+
+    // Check if the PDF is generated properly
+    if (!$pdf) {
+        return abort(500, 'Failed to generate PDF');
+    }
+
+    // Return the generated PDF as a download
+    return $pdf->download('roles.pdf');
+}
+
+
+
+
      public function store(RoleRequest $request): RedirectResponse
     {
         // dd($request->all());

@@ -6,7 +6,9 @@ use App\Http\Controllers\DashboardController;
 use App\Livewire\PermissionManagement;
 use App\Livewire\PermissionManagementCreate;
 use App\Livewire\PermissionManagementEdit;
-use App\Livewire\Roles;
+use App\Livewire\Roles\Indexrole;
+use App\Livewire\Roles\CreateRole;
+use App\Livewire\Roles\Editrole;
 use App\Livewire\AdminsIndex;
 use App\Livewire\AdminsCreate;
 use App\Livewire\AdminsEdit;
@@ -30,8 +32,17 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::view('profile', 'profile')->name('profile');
     // for role resource
     Route::resource('roles', RolesController::class);
+    Route::get('admin/roles/exportCSV', [RolesController::class, 'exportCSV'])->name('roles.exportCSV');
+    Route::get('admin/roles/pdf', [RolesController::class, 'exportPDF'])->name('roles.exportPDF');
+
+
+
+
     // for role live wire
-    Route::get('roles/create', [RolesController::class, 'create'])->name('roles.create');
+  
+    // Route::get('roles', Indexrole::class)->name('roles.index');
+    // Route::get('roles/create', CreateRole::class)->name('roles.create');
+    // Route::get('roles/{role}/edit', Editrole::class)->name('roles.edit');
 
 
     // for permission livewire
@@ -42,6 +53,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('admins', AdminsIndex::class)->name('admins.index');
     Route::get('admins/create', AdminsCreate::class)->name('admins.create');
     Route::get('admins/{admin}/edit', AdminsEdit::class)->name('admins.edit');
+
     
 
 })->middleware(['auth', 'verified']);

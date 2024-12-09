@@ -26,9 +26,11 @@
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&display=swap" rel="stylesheet" />
         <link  href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
        {{-- for toast --}}
+       {{-- <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css"> --}}
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
         <script>
             if (localStorage.getItem('dark-mode') === 'false' || !('dark-mode' in localStorage)) {

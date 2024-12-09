@@ -3,15 +3,15 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DataFeedController;
 use App\Http\Controllers\DashboardController;
-use App\Livewire\PermissionManagement;
-use App\Livewire\PermissionManagementCreate;
-use App\Livewire\PermissionManagementEdit;
+use App\Livewire\Permissions\PermissionManagement;
+use App\Livewire\Permissions\PermissionManagementCreate;
+use App\Livewire\Permissions\PermissionManagementEdit;
 use App\Livewire\Roles\Indexrole;
 use App\Livewire\Roles\CreateRole;
 use App\Livewire\Roles\Editrole;
-use App\Livewire\AdminsIndex;
-use App\Livewire\AdminsCreate;
-use App\Livewire\AdminsEdit;
+use App\Livewire\Admins\AdminsIndex;
+use App\Livewire\Admins\AdminsCreate;
+use App\Livewire\Admins\AdminsEdit;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Livewire\RoleCreate;
 use App\Http\Controllers\UserController;
@@ -49,6 +49,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('permissions', PermissionManagement::class)->name('permissions');
     Route::get('/permissions/create', PermissionManagementCreate::class)->name('permissions.create');
     Route::get('permissions/{permission}/edit', PermissionManagementEdit::class)->name('permissions.edit');
+    
     // route for admin live wire
     Route::get('admins', AdminsIndex::class)->name('admins.index');
     Route::get('admins/create', AdminsCreate::class)->name('admins.create');

@@ -1,5 +1,5 @@
 <?php
-namespace App\Livewire;
+namespace App\Livewire\Permissions;
 
 use Livewire\Component;
 use Spatie\Permission\Models\Permission as SpatiePermission;
@@ -58,6 +58,6 @@ class PermissionManagementEdit extends Component
     // Render the edit form view
     public function render()
     {
-        return view('livewire.permission-management-edit')->layout('layouts.app');
+        return view('livewire.Permissions.permission-management-edit')->layout('layouts.app');
     }
 }

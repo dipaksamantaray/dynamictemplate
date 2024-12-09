@@ -1,5 +1,5 @@
 <?php
-namespace App\Livewire;
+namespace App\Livewire\Permissions;
 
 use Livewire\Component;
 use Spatie\Permission\Models\Permission as SpatiePermission;
@@ -35,7 +35,7 @@ class PermissionManagementCreate extends Component
     }
     public function render()
     {
-        return view('livewire.permission-management-create')->layout('layouts.app');
+        return view('livewire.Permissions.permission-management-create')->layout('layouts.app');
     }
 
     public function createPermission()

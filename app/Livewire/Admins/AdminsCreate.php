@@ -1,5 +1,5 @@
 <?php
-namespace App\Livewire;
+namespace App\Livewire\Admins;
 
 use Livewire\Component;
 use App\Models\User;
@@ -60,13 +60,15 @@ class AdminsCreate extends Component
 
         $admin->assignRole($this->roles);
 
-        session()->flash('success', __('Admin created successfully!'));
+        // session()->flash('success', __('Admin created successfully!'));
+        flash()->success('Admin Created successfully.');
+
         return redirect()->route('admin.admins.index');
     }
 
     public function render()
     {
         $this->checkAuthorization(auth()->user(), ['admin.create']);
-        return view('livewire.admins-create')->layout('layouts.app');
+        return view('livewire.Admins.admins-create')->layout('layouts.app');
     }
 }

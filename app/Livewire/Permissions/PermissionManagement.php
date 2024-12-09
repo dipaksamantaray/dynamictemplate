@@ -1,5 +1,5 @@
 <?php
-namespace App\Livewire;
+namespace App\Livewire\Permissions;
 
 use Livewire\Component;
 use Spatie\Permission\Models\Permission as SpatiePermission;
@@ -40,7 +40,7 @@ class PermissionManagement extends Component
       
         $this->checkAuthorization(auth()->user(), 'role.view'); 
 
-        return view('livewire.permission-management')->layout('layouts.app');
+        return view('livewire.Permissions.permission-management')->layout('layouts.app');
     }
 
     public function deletePermission($id)
@@ -74,7 +74,7 @@ class PermissionManagement extends Component
         ];
 
         // Load the view and pass the data
-        $pdf = PDF::loadView('admins.permissionpdf', $data);
+        $pdf = PDF::loadView('PDF.permissionpdf', $data);
 
         // Generate the PDF and return the content (use output() here)
         $pdfContent = $pdf->output();

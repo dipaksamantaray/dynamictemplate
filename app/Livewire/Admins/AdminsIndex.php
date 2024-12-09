@@ -1,5 +1,5 @@
 <?php
-namespace App\Livewire;
+namespace App\Livewire\Admins;
 use Livewire\Component;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
@@ -37,7 +37,7 @@ class AdminsIndex extends Component
         $admin = User::findOrFail($adminId);
         $admin->delete();
         $this->admins = User::with('roles')->get();
-        flash()->warning('Permission Delted successfully.');
+        flash()->warning('Admin Delted successfully.');
 
         return redirect()->route('admin.admins.index');
 
@@ -52,17 +52,17 @@ class AdminsIndex extends Component
     public function exportPDF()
     {
         // Get the data from the database or any static data
-        $users = User::with('roles')->get();
-        // dd( $users );
+        $roles = User::get();
+        // dd( $roles);
 
         $data = [
             'title' => 'Welcome to Admins Portal',
             'date' => date('m/d/Y'),
-            'users' => $users
+            'roles' => $roles
         ];
 
         // Load the view and pass the data
-        $pdf = PDF::loadView('admins.pdf', $data);
+        $pdf = PDF::loadView('PDF.admissionpdf', $data);
 
         // Generate the PDF and return the content (use output() here)
         $pdfContent = $pdf->output();
@@ -86,6 +86,6 @@ class AdminsIndex extends Component
     {
         $this->checkAuthorization(auth()->user(), ['admin.view']);
 
-        return view('livewire.admins-index')->layout('layouts.app');
+        return view('livewire.Admins.admins-index')->layout('layouts.app');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Admins;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Log;
@@ -49,7 +49,7 @@ class AdminsEdit extends Component
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $this->admin->id,
             'password' => 'nullable|min:8|confirmed',
-            'roles' => 'array|required'
+            'roles' => 'required'
         ]);
 
         // Update the admin's data
@@ -66,7 +66,7 @@ class AdminsEdit extends Component
         // Sync roles
         $this->admin->syncRoles($this->roles);
 
-        flash()->success('Permission Upadted successfully.');
+        flash()->success('Admin Upadted successfully.');
         return redirect()->route('admin.admins.index'); 
     }
 
@@ -74,6 +74,6 @@ class AdminsEdit extends Component
     {
         $this->checkAuthorization(auth()->user(), ['admin.edit']);
 
-        return view('livewire.admins-edit')->layout('layouts.app');
+        return view('livewire.Admins.admins-edit')->layout('layouts.app');
     }
 }

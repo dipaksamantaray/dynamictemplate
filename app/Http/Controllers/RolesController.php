@@ -30,7 +30,7 @@ class RolesController extends Controller
      
         $this->checkAuthorization(auth()->user(), ['role.view']); 
 
-        return view('livewire.index', [
+        return view('pages.roles.index', [
             'roles' => Role::all(),
            
         ]);
@@ -65,7 +65,7 @@ public function exportPDF()
     ];
 
     // Load the view and pass data for rendering
-    $pdf = PDF::loadView('roles.pdf', $data);
+    $pdf = PDF::loadView('PDF.rolespdf', $data);
 
     // Check if the PDF is generated properly
     if (!$pdf) {

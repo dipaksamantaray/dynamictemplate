@@ -25,9 +25,9 @@
         <div class="card bg-base-100 w-full max-w-6xl shadow-xl dark:bg-gray-800 dark:text-gray-200">
             <div class="card-body">
                 <div class="flex justify-between items-center mb-6">
-                    <h4 class="header-title font-semibold text-xl">{{ __('Edit Role') }}-({{ $role->name }})</h4>
+                    <h4 class="header-title font-semibold text-xl badge badge-primary">{{ __('Edit Role') }}-({{ $role->name }})</h4>
                     <a href="{{ route('admin.roles.index') }}"
-                        class="btn btn-accent dark:bg-gray-600 dark:text-gray-200">{{ __('Back to Roles') }}</a>
+                        class="btn btn-accent"><i class="fa-solid fa-circle-arrow-left"></i>{{ __('Back to Roles') }}</a>
                 </div>
         <div class="row">
             <!-- data table start -->
@@ -102,7 +102,7 @@
                             <button type="submit" class="btn btn-primary mt-4 pr-4 pl-4">Save</button>
                             {{-- <a href="{{ route('admin.admins.index') }}" class="btn btn-secondary mt-4 pr-4 pl-4">Cancel</a> --}}
                             <a href="{{ route('admin.roles.index') }}"
-                                            class="btn btn-secondary dark:bg-gray-600 dark:text-gray-200">{{ __('Cancel') }}</a>
+                                            class="btn btn-warning dark:bg-warning-600 dark:text-gray-200">{{ __('Cancel') }}</a>
                                     </div>
                         </form>
                     </div>

@@ -21,8 +21,8 @@
         <div class="card bg-base-100 w-full max-w-6xl shadow-xl dark:bg-gray-800 dark:text-gray-200">
             <div class="card-body">
                 <div class="flex justify-between items-center mb-6">
-                    <h4 class="header-title font-semibold text-xl">{{ __('Edit Admin') }}</h4>
-                    <a href="{{ route('admin.admins.index') }}" class="btn btn-accent">{{ __('Back to Admins') }}</a>
+                    <h4 class="header-title font-semibold text-xl badge badge-primary">{{ __('Edit Admin') }}</h4>
+                    <a href="{{ route('admin.admins.index') }}" class="btn btn-accent"><i class="fa-solid fa-circle-arrow-left"></i>{{ __('Back to Admins') }}</a>
                 </div>
 
                 <form wire:submit.prevent="update">

@@ -33,7 +33,7 @@ class AdminsIndex extends Component
 
     public function deleteAdmin($adminId)
     {
-        $this->checkAuthorization(auth()->user(), ['admin.delete']);
+        $this->checkAuthorization(auth()->user(),['admin.delete']);
         $admin = User::findOrFail($adminId);
         $admin->delete();
         $this->admins = User::with('roles')->get();

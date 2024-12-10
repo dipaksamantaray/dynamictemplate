@@ -49,7 +49,6 @@ class PermissionManagement extends Component
 
 
         SpatiePermission::find($id)->delete();
-        // $this->dispatch('toast', 'error', 'Delete was successful!');
         flash()->warning('Permission Delted successfully.');
         $this->permissions = SpatiePermission::all(); 
     }

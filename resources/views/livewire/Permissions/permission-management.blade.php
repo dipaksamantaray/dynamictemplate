@@ -24,7 +24,7 @@
                     <!-- "Create New Permission" button on the left -->
                     <p class="mb-2">
                         <a class="btn btn-primary text-white" href="{{ route('admin.permissions.create') }}">
-                            <i class="fas fa-plus"></i> {{ __('Create Permission') }}
+                             {{ __('Create Permission') }}<i class="fas fa-plus"></i>
                         </a>
                     </p>
 
@@ -33,7 +33,7 @@
 <div x-data="{ open: false }" class="relative inline-block text-left">
     <!-- Button to trigger the dropdown -->
     <button type="button" class="btn btn-accent" @click="open = !open">
-        {{ __('Export Permission') }}
+        {{ __('Export Permission') }}<i class="fa-solid fa-download"></i>
     </button>
 
     <!-- Dropdown menu -->
@@ -46,12 +46,12 @@
         class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-200 rounded-md shadow-lg z-10">
         <div class="py-1">
             <!-- CSV Option -->
-            <a href="#" wire:click="exportCSV" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200">
-                {{ __('Export CSV') }}
+            <a href="#" wire:click="exportCSV" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-black-200">
+                {{ __('Export CSV') }}&nbsp;&nbsp;<i class="fa-solid fa-file-csv"></i>
             </a>
             <!-- PDF Option -->
-            <a href="#" wire:click="exportPDF" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200">
-                {{ __('Export PDF') }}
+            <a href="#" wire:click="exportPDF" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-black-200">
+                {{ __('Export PDF') }}&nbsp;&nbsp;<i class="fa-solid fa-file-pdf"></i>
             </a>
         </div>
     </div>
@@ -76,8 +76,15 @@
                                     <td class="px-4 py-2">{{ $permission->guard_name }}</td>
                                     <td class="px-4 py-2">{{ $permission->group_name ?? 'N/A' }}</td>
                                     <td class="px-4 py-2">
-                                        <a href="{{ route('admin.permissions.edit', ['permission' => $permission->id]) }}" class="btn btn-sm btn-primary">{{ __('Edit') }}</a>
-                                        <button wire:click="deletePermission({{ $permission->id }})" class="btn btn-sm btn-error">{{ __('Delete') }}</button>
+                                        <a href="{{ route('admin.permissions.edit', ['permission' => $permission->id]) }}" class="btn btn-sm btn-success">{{ __('Edit') }}</a>
+                                        {{-- <button wire:click="deletePermission({{ $permission->id }})" class="btn btn-sm btn-error">{{ __('Delete') }}</button> --}}
+                                        <button 
+                                        wire:click="deletePermission({{ $permission->id }})" 
+                                        class="btn btn-sm btn-error" 
+                                        onclick="confirm('Are you sure want to delete the Permission ?') || event.stopImmediatePropagation();"
+                                    >
+                                        {{ __('Delete') }}
+                                    </button>
                                     </td>
                                 </tr>
                             @endforeach

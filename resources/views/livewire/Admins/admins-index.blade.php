@@ -24,13 +24,13 @@
                     <p class="mb-2">
                         @if (auth()->user()->can('admin.edit'))
                             <a class="btn btn-primary text-white" href="{{ route('admin.admins.create') }}">
-                                {{ __('Create New Admin') }}
+                                {{ __('Create New Admin') }} <i class="fa-solid fa-plus"></i>
                             </a>
                         @endif
                     </p>
                     <div x-data="{ open: false }" class="relative inline-block text-left">
                         <button type="button" class="btn btn-accent" @click="open = !open">
-                            {{ __('Export Admins') }}
+                            {{ __('Export Admins') }}<i class="fa-solid fa-download"></i>
                         </button>
                         <div x-show="open" x-transition:enter="transition ease-out duration-100"
                             x-transition:enter-start="opacity-0 transform scale-95"
@@ -41,12 +41,12 @@
                             class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-200 rounded-md shadow-lg z-10">
                             <div class="py-1">
                                 <a href="#" wire:click="exportCSV"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200">
-                                    {{ __('Export CSV') }}
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-black-200">
+                                    {{ __('Export CSV') }}&nbsp;&nbsp;<i class="fa-solid fa-file-csv"></i>
                                 </a>
                                 <a href="#" wire:click="exportPDF"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200">
-                                    {{ __('Export PDF') }}
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-black-200">
+                                    {{ __('Export PDF') }}&nbsp;&nbsp;<i class="fa-solid fa-file-pdf"></i>
                                 </a>
                             </div>
                         </div>
@@ -87,9 +87,10 @@
 
                                         @if (auth()->user()->can('admin.delete'))
                                             <button class="btn btn-error text-white"
-                                                wire:click="deleteAdmin({{ $admin->id }})">
+                                                wire:click="deleteAdmin({{ $admin->id }})"  onclick="confirm('Are you sure Want to delte the Admin ?') || event.stopImmediatePropagation();">
                                                 {{ __('Delete') }}
                                             </button>
+
                                         @endif
                                     </td>
                                 </tr>

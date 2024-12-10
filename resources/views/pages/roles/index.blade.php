@@ -102,13 +102,13 @@
                 <div class="flex justify-between items-center mb-4">
                     <p class="float-right mb-2">
                         @if (Auth::user()->can('role.create'))
-                            <a class="btn btn-primary text-white" href="{{ route('admin.roles.create') }}">Create New Role</a>
+                            <a class="btn btn-primary text-white" href="{{ route('admin.roles.create') }}">Create New Role <i class="fa-solid fa-plus"></i></a>
                         @endif
                     </p>
                     <div x-data="{ open: false }" class="relative inline-block text-left">
                         <!-- Button to trigger the dropdown -->
                         <button type="button" class="btn btn-accent" @click="open = !open">
-                            {{ __('Export Roles') }}
+                            {{ __('Export Roles') }}<i class="fa-solid fa-download"></i>
                         </button>
 
                         <!-- Dropdown menu -->
@@ -118,15 +118,15 @@
                             x-transition:leave="transition ease-in duration-75"
                             x-transition:leave-start="opacity-100 transform scale-100"
                             x-transition:leave-end="opacity-0 transform scale-95"
-                            class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+                            class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-200 rounded-md shadow-lg z-10">
                             <div class="py-1">
                                 <!-- CSV Option -->
-                                <a href="{{ route('admin.roles.exportCSV') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    {{ __('Export CSV') }}
+                                <a href="{{ route('admin.roles.exportCSV') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-black-200">
+                                    {{ __('Export CSV') }}&nbsp;&nbsp;<i class="fa-solid fa-file-csv"></i>
                                 </a>
                                 <!-- PDF Option -->
-                                <a href="{{ route('admin.roles.exportPDF') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    {{ __('Export PDF') }}
+                                <a href="{{ route('admin.roles.exportPDF') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-black-200">
+                                    {{ __('Export PDF') }}&nbsp;&nbsp;<i class="fa-solid fa-file-pdf"></i>
                                 </a>
                             </div>
                         </div>

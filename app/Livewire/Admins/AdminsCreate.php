@@ -38,6 +38,7 @@ class AdminsCreate extends Component
     // Real-time validation
     public function updated($propertyName)
     {
+        // dd($propertyName);
         // This will validate only the updated property
         $this->validateOnly($propertyName);
     }

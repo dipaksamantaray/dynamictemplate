@@ -20,8 +20,8 @@
             <div class="card-body">
                 <!-- Header Section -->
                 <div class="flex justify-between items-center mb-6">
-                    <h4 class="header-title font-semibold text-xl">{{ __('Create New Admin') }}</h4>
-                    <a href="{{ route('admin.admins.index') }}" class="btn btn-accent">{{ __('Back to Admins') }}</a>
+                    <h4 class="header-title font-semibold text-xl badge badge-primary">{{ __('Create New Admin') }}</h4>
+                    <a href="{{ route('admin.admins.index') }}" class="btn btn-accent"> <i class="fa-solid fa-circle-arrow-left"></i>{{ __('Back to Admins') }}</a>
                 </div>
 
                 <!-- Form Start -->
@@ -30,7 +30,7 @@
                         <!-- Admin Name -->
                         <div class="form-group">
                             <label for="name">{{ __('Admin Name') }}</label>
-                            <input type="text" class="input input-bordered w-full {{ $errors->has('name') ? 'input-error' : '' }} bg-white dark:bg-gray-700 dark:text-gray-200" id="name" wire:model="name" placeholder="Enter Name" autofocus>
+                            <input type="text" class="input input-bordered w-full {{ $errors->has('name') ? 'input-error' : '' }} bg-white dark:bg-gray-700 dark:text-gray-200" id="name"  wire:model.lazy="name" placeholder="Enter Name" autofocus>
                             @error('name') 
                             <span class="text-red-500 text-sm">{{ $message }}</span> 
                             @enderror
@@ -39,7 +39,7 @@
                         <!-- Admin Email -->
                         <div class="form-group">
                             <label for="email">{{ __('Admin Email') }}</label>
-                            <input type="email" class="input input-bordered w-full {{ $errors->has('email') ? 'input-error' : '' }} bg-white dark:bg-gray-700 dark:text-gray-200" id="email" wire:model="email" placeholder="Enter Email">
+                            <input type="email" class="input input-bordered w-full {{ $errors->has('email') ? 'input-error' : '' }} bg-white dark:bg-gray-700 dark:text-gray-200" id="email"  wire:model.lazy="email" placeholder="Enter Email">
                             @error('email') 
                             <span class="text-red-500 text-sm">{{ $message }}</span> 
                             @enderror
@@ -48,7 +48,7 @@
                         <!-- Password -->
                         <div class="form-group">
                             <label for="password">{{ __('Password') }}</label>
-                            <input type="password" class="input input-bordered w-full {{ $errors->has('password') ? 'input-error' : '' }} bg-white dark:bg-gray-700 dark:text-gray-200" id="password" wire:model="password" placeholder="Enter Password">
+                            <input type="password" class="input input-bordered w-full {{ $errors->has('password') ? 'input-error' : '' }} bg-white dark:bg-gray-700 dark:text-gray-200" id="password"  wire:model.lazy="password" placeholder="Enter Password">
                             @error('password') 
                             <span class="text-red-500 text-sm">{{ $message }}</span> 
                             @enderror
@@ -57,7 +57,7 @@
                         <!-- Confirm Password -->
                         <div class="form-group">
                             <label for="password_confirmation">{{ __('Confirm Password') }}</label>
-                            <input type="password" class="input input-bordered w-full {{ $errors->has('password_confirmation') ? 'input-error' : '' }} bg-white dark:bg-gray-700 dark:text-gray-200" id="password_confirmation" wire:model="password_confirmation" placeholder="Confirm Password">
+                            <input type="password" class="input input-bordered w-full {{ $errors->has('password_confirmation') ? 'input-error' : '' }} bg-white dark:bg-gray-700 dark:text-gray-200" id="password_confirmation"  wire:model.lazy="password_confirmation" placeholder="Confirm Password">
                             @error('password_confirmation') 
                             <span class="text-red-500 text-sm">{{ $message }}</span> 
                             @enderror
@@ -92,7 +92,7 @@
                         <!-- Admin Username -->
                         <div class="form-group">
                             <label for="username">{{ __('Admin Username') }}</label>
-                            <input type="text" class="input input-bordered w-full {{ $errors->has('username') ? 'input-error' : '' }} bg-white dark:bg-gray-700 dark:text-gray-200" id="username" wire:model="username" placeholder="Enter Username">
+                            <input type="text" class="input input-bordered w-full {{ $errors->has('username') ? 'input-error' : '' }} bg-white dark:bg-gray-700 dark:text-gray-200" id="username"  wire:model.lazy="username" placeholder="Enter Username">
                             @error('username') <span class="text-error">{{ $message }}</span> @enderror
                         </div>
                     </div>
@@ -100,7 +100,7 @@
                     <!-- Buttons -->
                     <div class="flex justify-end gap-4 mt-6">
                         <button type="submit" class="btn btn-primary">{{ __('Save') }}</button>
-                        <a href="{{ route('admin.admins.index') }}" class="btn btn-secondary">{{ __('Cancel') }}</a>
+                        <a href="{{ route('admin.admins.index') }}" class="btn btn-warning">{{ __('Cancel') }}</a>
                     </div>
                 </form>
                 <!-- Form End -->

@@ -79,25 +79,45 @@ public function exportPDF()
 
 
 
-     public function store(RoleRequest $request): RedirectResponse
-    {
-        // dd($request->all());
-        $this->checkAuthorization(auth()->user(), ['role.create']);
-        Log::info('Role creation data: ', $request->all());
+    //  public function store(RoleRequest $request): RedirectResponse
+    // {
+    //     $this->checkAuthorization(auth()->user(), ['role.create']);
+    //     $role = Role::create(['name' => $request->name, 'guard_name' => 'web']);
 
-        // Process Data.
-        $role = Role::create(['name' => $request->name, 'guard_name' => 'web']);
+    //     // $role = DB::table('roles')->where('name', $request->name)->first();
+    //     $permissions = $request->input('permissions');
 
-        // $role = DB::table('roles')->where('name', $request->name)->first();
-        $permissions = $request->input('permissions');
+    //     if (!empty($permissions)) {
+    //         $role->syncPermissions($permissions);
+    //     }
 
-        if (!empty($permissions)) {
-            $role->syncPermissions($permissions);
-        }
+    //     session()->flash('success', 'Role has been created.');
+    //     return redirect()->route('admin.roles.index');
+    // }
 
-        session()->flash('success', 'Role has been created.');
-        return redirect()->route('admin.roles.index');
-    }
+    public function store(Request $request)
+{
+    $request->validate([
+        'name' => 'required|string|max:255|unique:roles,name',
+        'permissions' => 'required|array',
+        'permissions.*' => 'exists:permissions,name',
+    ], [
+        'name.required' => 'The role name is required.',
+        'name.unique' => 'This role name already exists. Please choose a different name.',
+        'permissions.required' => 'At least one permission must be selected.',
+        'permissions.*.exists' => 'One or more selected permissions are invalid.',
+    ]);
+
+    // Create the role
+    $role = Role::create(['name' => $request->name]);
+
+    // Sync permissions with the role
+    $role->syncPermissions($request->permissions);
+    flash()->success('role created successfully.');
+
+    return redirect()->route('admin.roles.index');
+}
+
     
     /**
      * Show the form for editing the specified resource.
@@ -108,7 +128,9 @@ public function exportPDF()
 
         $role = Role::findById($id, 'web');
         if (!$role) {
-            session()->flash('error', 'Role not found.');
+            // session()->flash('error', 'Role not found.');
+        flash()->error('Role  not found.');
+            
             return back();
         }
 
@@ -141,7 +163,9 @@ public function exportPDF()
             $role->syncPermissions($permissions);
         }
 
-        session()->flash('success', 'Role has been updated.');
+        // session()->flash('success', 'Role has been updated.');
+        flash()->success('Role  has been updated.');
+        
         return redirect(route('admin.roles.index'));
     }
 
@@ -154,12 +178,14 @@ public function exportPDF()
 
         $role = Role::findById($id, 'web');
         if (!$role) {
-            session()->flash('error', 'Role not found.');
+        flash()->error('Role not found.');
+            
             return back();
         }
 
         $role->delete();
-        session()->flash('success', 'Role has been deleted.');
+        flash()->warning('Role Delted successfully.');
+
         return redirect()->route('admin.roles.index');
     }
 }

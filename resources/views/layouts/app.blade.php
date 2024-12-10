@@ -25,6 +25,9 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&display=swap" rel="stylesheet" />
         <link  href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
+
+        {{-- for font awesome cdn --}}
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" rel="stylesheet"/>
        {{-- for toast --}}
        {{-- <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css"> --}}
 
@@ -80,7 +83,10 @@
     </div>
     {{-- for toast --}}
     <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+   
+    
     @livewireScriptConfig
+    
    
 </body>
 </html>

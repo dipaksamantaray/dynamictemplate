@@ -18,22 +18,40 @@ new #[Layout('layouts.guest')] class extends Component
     /**
      * Handle an incoming registration request.
      */
+    // 
     public function register(): void
-    {
-        $validated = $this->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
-        ]);
+{
+    $validated = $this->validate([
+        'name' => ['required', 'string', 'max:255'],
+        'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+        'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+    ]);
 
-        $validated['password'] = Hash::make($validated['password']);
+    // Hash the password before saving
+    $validated['password'] = Hash::make($validated['password']);
 
-        event(new Registered($user = User::create($validated)));
+    // Create the user
+    event(new Registered($user = User::create($validated)));
 
-        Auth::login($user);
+    // Check if the user has any role
+    if ($user->roles->isEmpty()) {
+        // Logout the user if they have no roles
+        Auth::logout();
 
-        $this->redirect(route('admin.dashboard', absolute: false), navigate: true);
+        // Optionally, you can set a flash message or custom message
+        session()->flash('error', 'You are not authorized to login because you have no role.');
+
+        // Redirect or return a 403 response
+        abort(403, 'Your registraion successfuly but you have  not authorized to login because you have no permission to login please contact to your admin.');
     }
+
+    // If the user has roles, log them in
+    Auth::login($user);
+
+    // Redirect to the dashboard
+    $this->redirect(route('admin.dashboard', absolute: false), navigate: true);
+}
+
 }; ?>
 
 <div>

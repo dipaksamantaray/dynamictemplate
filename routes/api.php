@@ -1,27 +1,25 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\UserController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\DataFeedController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Auth\ApiAuthController;
-use App\Http\Controllers\RolesController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\PassportController;
+use Laravel\Passport\Http\Controllers\PersonalAccessTokenController;
+use Laravel\Passport\Http\Controllers\TransientTokenController;
+use Laravel\Passport\Http\Controllers\AccessTokenController;
+use Laravel\Passport\Http\Controllers\AuthorizationController;
+use Laravel\Passport\Http\Controllers\ClientController;
 
 
+// Public routes
+Route::post('register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login']);
+// Route::post('/oauth/token', [AccessTokenController::class, 'issueToken']);
+// Route::post('/oauth/token/refresh', [AccessTokenController::class, 'refreshToken']);
 
-
-// Registration and login endpoints for API
-Route::post('/register', [ApiAuthController::class, 'register']);
-Route::post('/login', [ApiAuthController::class, 'login']);
-
-// Protected API routes
-Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
-
-    Route::get('/profile',[PassportController::class,'profile'])->name('profile');
-    Route::get('/admin/index',[PassportController::class,'adminindex'])->name('admin.index');
-    Route::post('admins/create',[PassportController::class,'admincreate'])->name('admin.store');
-
+// Authenticated routes
+Route::middleware('auth:api')->group(function () {
+    Route::post('token/refresh', [AuthController::class, 'refreshToken']);
+    Route::post('token/generate', [AuthController::class, 'generateToken']);
+    Route::get('protected-route', [AuthController::class, 'protectedRoute'])->middleware('scope:view-data');
+    Route::post('create/customer', [AuthController::class, 'customercreate'])->middleware('scope:create-data');
 });

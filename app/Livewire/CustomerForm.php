@@ -3,7 +3,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\Customer;
-
+use Auth;
 class CustomerForm extends Component
 {
     public $name, $email, $mobile,$subscription, $gender, $dob, $additional_info, $preferences = [];
@@ -25,6 +25,7 @@ class CustomerForm extends Component
 
         // Logic to store customer data
         Customer::create([
+            'user_id'=> Auth::user()->id,
             'name' => $this->name,
             'email' => $this->email,
             'mobile' => $this->mobile,
@@ -34,6 +35,7 @@ class CustomerForm extends Component
             'additional_info' => $this->additional_info,
             'preferences' => json_encode($this->preferences),
         ]);
+        // dd(Auth::user()->id);
 
         // Success message after form submission
         session()->flash('success', 'Customer added successfully!');

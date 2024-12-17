@@ -19,12 +19,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Passport::loadKeysFrom(base_path('app/secrets/oauth'));
-        Passport::tokensCan([
-            'view-profile' => 'View user profile',
-            'edit-profile' => 'Edit user profile',
-            'admin' => 'Admin privileges',
-        ]);
+        // Passport::loadKeysFrom(base_path('app/secrets/oauth'));
+        // Passport::tokensCan([
+        //     'view-profile' => 'View user profile',
+        //     'edit-profile' => 'Edit user profile',
+        //     'admin' => 'Admin privileges',
+        // ]);
     
     }
 }

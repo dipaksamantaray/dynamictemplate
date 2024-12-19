@@ -20,6 +20,8 @@ Route::post('login', [AuthController::class, 'login']);
 Route::middleware('auth:api')->group(function () {
     Route::post('token/refresh', [AuthController::class, 'refreshToken']);
     Route::post('token/generate', [AuthController::class, 'generateToken']);
-    Route::get('protected-route', [AuthController::class, 'protectedRoute'])->middleware('scope:view-data');
+    Route::get('protected-route/{id}', [AuthController::class, 'protectedRoute'])->middleware('scope:view-data');
     Route::post('create/customer', [AuthController::class, 'customercreate'])->middleware('scope:create-data');
+    Route::post('edit/customer/{id}/{user_id}', [AuthController::class, 'customeredit'])->middleware('scope:edit-data');
+    Route::get('delete/customer/{id}/{user_id}', [AuthController::class, 'delete'])->middleware('scope:delete-data');
 });

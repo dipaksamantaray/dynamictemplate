@@ -59,173 +59,245 @@ class AuthController extends Controller
             'refresh_token' => $refreshToken,
         ]);
     }
-    public function refreshToken(Request $request)
-    {
-        $request->validate([
-            'refresh_token' => 'required|string',
-            'client_id' => 'required',
-            'client_secret' => 'required',
-        ]);
-    
-        try {
-            // dd($request->all());
-    
-            $refreshToken = $request->input('refresh_token');
-            // dd( $refreshToken);
-            $clientId = $request->input('client_id');
-            // dd( $clientId);
-            $clientSecret = $request->input('client_secret');
-            // dd( $clientSecret);
-    
-            $client = Client::find($clientId);
-            // dd($client);
-            if (!$client || !hash_equals($client->secret, $clientSecret)) {
-                dd("hello");
-                Log::warning("Client secret mismatch or client not found.");
-                return response()->json(['error' => 'Invalid client credentials'], 401);
-            }
-    
-            Log::info("Client credentials validated."); 
-    
-            $refreshTokenRepository = app(RefreshTokenRepository::class);
-            Log::info("RefreshTokenRepository instantiated.");
-    
-            $tokenRepository = app(TokenRepository::class);
-            Log::info("TokenRepository instantiated.");
-    
-            $refreshTokenModel = DB::table('oauth_refresh_tokens')->where('id', $refreshToken)->first();
-    
-            if (!$refreshTokenModel) {
-                Log::warning("Refresh token not found: " . $refreshToken);
-                return response()->json(['error' => 'Invalid refresh token'], 400);
-            }
-    
-            Log::info("Refresh token found.");
-    
-            $accessToken = DB::table('oauth_access_tokens')->where('id', $refreshTokenModel->access_token_id)->first();
-            if (!$accessToken || $accessToken->revoked) {
-                Log::warning("Access token associated with refresh token was revoked or doesn't exist.");
-                return response()->json(['error' => 'Access token has been revoked or does not exist'], 401);
-            }
-    
-            Log::info("Access token found and not revoked.");
-    
-            if (Carbon::parse($accessToken->expires_at)->isPast()) {
-                Log::warning("Access token associated with refresh token is expired.");
-                return response()->json(['error' => 'Access token is expired'], 401);
-            }
-    
-            Log::info("Access token is not expired.");
-    
-            if ($accessToken->client_id != $clientId) {
-                Log::warning("Client ID mismatch.");
-                return response()->json(['error' => 'Client ID mismatch'], 400);
-            }
-    
-            $user = \App\Models\User::find($accessToken->user_id);
-    
-            if (!$user) {
-                Log::warning("User not found for access token.");
-                return response()->json(['error' => 'User not found.'], 401);
-            }
-    
-            Log::info("User found.");
-    
-            // Revoke old tokens
-            DB::table('oauth_refresh_tokens')->where('id', $refreshToken)->update(['revoked' => true]);
-            DB::table('oauth_access_tokens')->where('id', $accessToken->id)->update(['revoked' => true]);
-    
-            Log::info("Old tokens revoked.");
-    
-            // Issue new tokens using Passport::actingAs
-            Passport::actingAs($user);
-            $newTokenInstance = Passport::token();
-            $newAccessToken = $newTokenInstance->accessToken;
-            $newRefreshTokenId = $newTokenInstance->id;
-    
-            Log::info("New tokens issued successfully.");
-    
+ 
+public function refreshToken(Request $request)
+{
+    try {
+        // Ensure the user is authenticated
+        $user = Auth::user();
+
+        if (!$user) {
             return response()->json([
-                'access_token' => $newAccessToken,
-                'refresh_token' => $newRefreshTokenId,
-                'expires_at' => now()->addDays(15),
-            ]);
-    
-        } catch (\Exception $e) {
-            Log::error("Error refreshing token: " . $e->getMessage() . "\nTrace: " . $e->getTraceAsString());
-            return response()->json(['error' => 'Could not refresh token'], 500);
+                'success' => false,
+                'message' => 'Unauthorized',
+            ], 401);
         }
+
+        // Revoke all existing tokens for the user (optional)
+        $user->tokens()->delete();
+
+        // Create a new personal access token with required scopes
+        $newToken = $user->createToken('API Token', ['create-data','view-data','delete-data','edit-data']); // Add all required scopes here
+
+        return response()->json([
+            'success' => true,
+            'token' => $newToken->accessToken, // Passport provides the token string directly
+            'expires_in' => now()->addDays(15)->diffInSeconds(), // Set the expiration time
+        ], 200);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => $e->getMessage(),
+        ], 500);
     }
-    public function generateToken(Request $request)
+}
+
+public function generateToken(Request $request)
     {
         $user = $request->user(); // Get the authenticated user
         // $token = $user->createToken('API Token', ['view-data'])->accessToken;
-        $token = $user->createToken('API Token', ['create-data','view-data'])->accessToken;
+        $token = $user->createToken('API Token', ['create-data','view-data','delete-data','edit-data'])->accessToken;
         return response(['access_token' => $token]);
     }
-    public function protectedRoute()
+
+
+
+
+public function protectedRoute($id)
 {
-    $customers = Customer::get();
-    // dd($customers);
-    return response()->json([$customers]);
-}
-
-
-// public function customercreate(Request $request){
-//     // dd(Auth::user()->id);
-//     $create_customer = new Customer();
-//     // $create_customer = Auth::user()->id;
-//     $create_customer->name = $request->name;
-//     $create_customer->email = $request->email;
-//     $create_customer->mobile=$request->mobile;
-//     $create_customer->subscription=$request->subscription;
-//     $create_customer->gender=$request->gender;
-//     $create_customer->dob=$request->dob;
-//     $create_customer->additional_info=$request->additional_info;
-//     $create_customer->preferences=$request->preferences;
-//     $create_customer->save();
-//     return response()->json(['create_customer' => $create_customer]);
-// }
-
-public function customercreate(Request $request)
-{
-    // Validate the incoming request data
-    $validated = $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:customers,email',
-        'mobile' => 'required|string|max:15',
-        'subscription' => 'required|string',
-        'gender' => 'required|string',
-        'dob' => 'required|date',
-        'additional_info' => 'nullable|string',
-        'preferences' => 'nullable|string',
-    ]);
-
-    // Get the currently authenticated user
-    $userId = auth()->id(); // This will get the authenticated user's ID
-
-    // Prepare data for insertion
-    $customerData = [
-        'name' => $validated['name'],
-        'email' => $validated['email'],
-        'mobile' => $validated['mobile'],
-        'subscription' => $validated['subscription'],
-        'gender' => $validated['gender'],
-        'dob' => $validated['dob'],
-        'additional_info' => $validated['additional_info'] ?? null,
-        'preferences' => $validated['preferences'] ?? null,
-        'user_id' => $userId,  // Add the user_id here
-    ];
-
-    // Save the customer data into the database
     try {
-        $customer = Customer::create($customerData);
-        return response()->json(['success' => true, 'customer' => $customer]);
+        // Get the authenticated user's ID
+        $authId = Auth::id();
+
+        // Check if the provided ID matches the authenticated user ID
+        if ($id != $authId) {
+            return response()->json([
+                "message" => "Unauthorized access. Invalid user ID provided."
+            ], 403);
+        }
+
+        // Fetch the authenticated user and their roles
+        $authUser = Auth::user();
+
+        // Check if the authenticated user has the 'User' role
+        if (!$authUser->roles->contains('name', 'User')) {
+            return response()->json([
+                "message" => "Access denied. You do not have the Permission."
+            ], 403);
+        }
+
+        // Fetch customers associated with the authenticated user
+        $customers = Customer::where('user_id', $authId)->get();
+
+        return response()->json([
+            "success" => true,
+            "customers" => $customers
+        ], 200);
     } catch (\Exception $e) {
-        return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+        return response()->json([
+            "success" => false,
+            "error" => $e->getMessage(),
+        ], 500);
     }
 }
+public function customercreate(Request $request)
+{
+    try {
+        // Get the currently authenticated user
+        $authUser = Auth::user();
 
+        // Check if the authenticated user has the 'User' role
+        if (!$authUser->roles->contains('name', 'User')) {
+            return response()->json([
+                "message" => "Access denied. You do not have the permission."
+            ], 403);
+        }
+
+        // Validate the incoming request data
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:customers,email',
+            'mobile' => 'required|string|max:15',
+            'subscription' => 'required|string',
+            'gender' => 'required|string',
+            'dob' => 'required|date',
+            'additional_info' => 'nullable|string',
+            'preferences' => 'nullable|string',
+        ]);
+
+        // Prepare data for insertion
+        $customerData = [
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'mobile' => $validated['mobile'],
+            'subscription' => $validated['subscription'],
+            'gender' => $validated['gender'],
+            'dob' => $validated['dob'],
+            'additional_info' => $validated['additional_info'] ?? null,
+            'preferences' => $validated['preferences'] ?? null,
+            'user_id' => $authUser->id, // Associate customer with the authenticated user
+        ];
+
+        // Save the customer data into the database
+        $customer = Customer::create($customerData);
+
+        return response()->json([
+            'success' => true,
+            'customer' => $customer
+        ], 201);
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        // Handle validation errors
+        return response()->json([
+            'success' => false,
+            'errors' => $e->errors(),
+        ], 422);
+    } catch (\Exception $e) {
+        // Handle other exceptions
+        return response()->json([
+            'success' => false,
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
+public function delete($id, $user_id)
+{
+    try {
+        // Get the authenticated user
+        $authUser = Auth::user();
+
+        if (!$authUser->roles->contains('name', 'User')) {
+            return response()->json([
+                'message' => 'Access denied. You do not have the permission.'
+            ], 403);
+        }
+
+        // Find and delete the customer
+        $customer = Customer::where('id', $id)
+            ->where('user_id', $user_id)
+            ->first();
+
+        if (!$customer) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Customer not found or already deleted.'
+            ], 404);
+        }
+
+        $customer->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Customer deleted successfully.'
+        ], 200);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
+public function customeredit(Request $request, $id, $user_id)
+{
+    try {
+        // Get the authenticated user
+        $authUser = Auth::user();
+
+        // Check if the authenticated user has the 'User' role
+        if (!$authUser->roles->contains('name', 'User')) {
+            return response()->json([
+                'message' => 'Access denied. You do not have the permission.'
+            ], 403);
+        }
+
+        // Find the customer by ID and user_id
+        $customer = Customer::where('id', $id)
+            ->where('user_id', $user_id)
+            ->first();
+
+        if (!$customer) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Customer not found or unauthorized to edit this customer.'
+            ], 404);
+        }
+
+        // Validate the incoming request data
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:customers,email,' . $id,
+            'mobile' => 'required|string|max:15',
+            'subscription' => 'required|string',
+            'gender' => 'required|string',
+            'dob' => 'required|date',
+            'additional_info' => 'nullable|string',
+            'preferences' => 'nullable|string',
+        ]);
+
+        // Update the customer data
+        $customer->update($validated);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Customer updated successfully.',
+            'customer' => $customer,
+        ], 200);
+
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        // Handle validation errors
+        return response()->json([
+            'success' => false,
+            'errors' => $e->errors(),
+        ], 422);
+    } catch (\Exception $e) {
+        // Handle unexpected errors
+        return response()->json([
+            'success' => false,
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
 
 
 }

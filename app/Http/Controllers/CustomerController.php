@@ -114,28 +114,28 @@ public function update(Request $request, $id)
 
 //     return redirect()->route('customers.index')->with('success', 'File imported successfully!');
 // }
-public function import(Request $request)
-{
+// public function import(Request $request)
+// {
 
-    // dd($request->file('file'));
-    // Validate the file
-    $request->validate([
-        'file' => 'required|file|mimes:xlsx,xls',
-    ]);
+//     // dd($request->file('file'));
+//     // Validate the file
+//     $request->validate([
+//         'file' => 'required|file|mimes:xlsx,xls',
+//     ]);
 
-    // Import the file using the import class
-    Excel::import(new CustomersImport, $request->file('file'));
+//     // Import the file using the import class
+//     Excel::import(new CustomersImport, $request->file('file'));
 
-    // Return a success message
-    return redirect()->route('customers.index')->with('success', 'File imported successfully!');
-}
+//     // Return a success message
+//     return redirect()->route('customers.index')->with('success', 'File imported successfully!');
+// }
 
 
-public function export()
-{
-    // Generate the download response without dd()
-    return Excel::download(new CustomersExport, 'customers.xlsx');
-}
+// public function export()
+// {
+//     // Generate the download response without dd()
+//     return Excel::download(new CustomersExport, 'customers.xlsx');
+// }
 
 
 

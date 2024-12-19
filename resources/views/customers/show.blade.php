@@ -21,8 +21,8 @@
                     Options
                 </button>
                 <div class="dropdown-content absolute hidden bg-white text-black shadow-lg rounded-md w-48 mt-1 z-10">
-                    <a href="{{ route('admin.customers.export') }}" class="block px-4 py-2">Export</a>
-                    <a href="{{ route('admin.customers.import') }}" class="block px-4 py-2">Import</a>
+                    {{-- <a href="{{ route('admin.customers.export') }}" class="block px-4 py-2">Export</a> --}}
+                    {{-- <a href="{{ route('admin.customers.import') }}" class="block px-4 py-2">Import</a> --}}
                 </div>
             </div>
         </div>

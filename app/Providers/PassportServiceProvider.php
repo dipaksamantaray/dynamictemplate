@@ -21,6 +21,8 @@ class PassportServiceProvider extends ServiceProvider
         Passport::tokensCan([
             'create-data' => 'create data',
             'view-data' => 'View data',
+            'delete-data' => 'Delete data',
+            'edit-data'=>'Edit Data'
         ]);
     }
 }

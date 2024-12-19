@@ -11,5 +11,6 @@ class Customer extends Model
         'email',
         'mobile',
         'subscription', 'gender', 'dob', 'additional_info', 'preferences',
+        'user_id',
     ];
 }

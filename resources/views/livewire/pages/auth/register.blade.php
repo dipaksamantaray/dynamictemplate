@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
-
+use App\Models\Tenant;
+// use Stancl\Tenancy\Database\Models\Tenant;
 new #[Layout('layouts.guest')] class extends Component
 {
     public string $name = '';
@@ -19,11 +20,97 @@ new #[Layout('layouts.guest')] class extends Component
      * Handle an incoming registration request.
      */
     // 
-    public function register(): void
+//     public function register(): void
+// {
+//     $validated = $this->validate([
+//         'name' => ['required', 'string', 'max:255'],
+//         'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+//         'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+//     ]);
+
+//     // Hash the password before saving
+//     $validated['password'] = Hash::make($validated['password']);
+
+//     // Create the user
+//     event(new Registered($user = User::create($validated)));
+
+//     // Check if the user has any role
+//     if ($user->roles->isEmpty()) {
+//         // Logout the user if they have no roles
+//         Auth::logout();
+
+//         // Optionally, you can set a flash message or custom message
+//         session()->flash('error', 'You are not authorized to login because you have no role.');
+
+//         // Redirect or return a 403 response
+//         abort(403, 'Your registraion successfuly but you have  not authorized to login because you have no permission to login please contact to your admin.');
+//     }
+
+//     // If the user has roles, log them in
+//     Auth::login($user);
+
+//     // Redirect to the dashboard
+//     $this->redirect(route('admin.dashboard', absolute: false), navigate: true);
+// }
+
+
+// new reg
+// public function register()
+// {
+//     $validated = $this->validate([
+//         'name' => ['required', 'string', 'max:255'],
+//         'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users'],
+//         'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+//     ]);
+
+//     // Hash the password before saving
+//     $validated['password'] = Hash::make($validated['password']);
+
+//     // Create the user in the central database
+//     $user = User::create($validated);
+
+//     // Prepare the tenant ID and domain
+//     $tenantId = strtolower($user->name) . '_tenant';
+//     $domain = 'app.' . strtolower($user->name) . '.com';
+
+//     // Create the tenant in the tenants table
+//     $tenant = Tenant::create([
+//         'id' => $tenantId,
+//         'name' => $user->name,
+//         'email' => $user->email,
+//         'password' => $user->password,
+//         'data' => json_encode(['registered_at' => now()]),
+//     ]);
+
+//     // Create the domain for this tenant
+//     $tenant->domains()->create([
+//         'domain' => $domain,
+//     ]);
+
+//     // Initialize the tenant (optional but recommended)
+//     tenancy()->initialize($tenant);
+
+//     // Check if the user has any roles
+//     if ($user->roles->isEmpty()) {
+//         session()->flash('error', 'You are not authorized to log in because you have no role.');
+//         Auth::logout();
+
+//         // Use Livewire's redirect() method
+//         return $this->redirect(route('login'));
+//     }
+
+//     // Log the user in and redirect
+//     Auth::login($user);
+
+//     // Use Livewire's redirect() method
+//     return $this->redirect(route('admin.dashboard'));
+// }
+
+public function register(): void
 {
     $validated = $this->validate([
         'name' => ['required', 'string', 'max:255'],
-        'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+        'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
         'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
     ]);
 
@@ -33,6 +120,23 @@ new #[Layout('layouts.guest')] class extends Component
     // Create the user
     event(new Registered($user = User::create($validated)));
 
+    // Create a tenant for the user using Stancl's Tenancy
+    $tenantId = strtolower($validated['name']); // Convert name to lowercase for consistency
+    $domain = "app.{$tenantId}"; // Create a subdomain (e.g., app.dipak)
+
+    // Create the tenant
+    $tenant = Tenant::create([
+        'id' => $tenantId,
+         'name' => $validated['name'],  
+        'email' => $validated['email'],
+        'password' => $validated['password'],
+        'data' => [],
+    ]);
+
+    // Attach the domain to the tenant
+    $tenant->domains()->create([
+        'domain' => $domain,
+    ]);
     // Check if the user has any role
     if ($user->roles->isEmpty()) {
         // Logout the user if they have no roles
@@ -42,7 +146,7 @@ new #[Layout('layouts.guest')] class extends Component
         session()->flash('error', 'You are not authorized to login because you have no role.');
 
         // Redirect or return a 403 response
-        abort(403, 'Your registraion successfuly but you have  not authorized to login because you have no permission to login please contact to your admin.');
+        abort(403, 'Your registration was successful, but you are not authorized to log in because you have no permission. Please contact your admin.');
     }
 
     // If the user has roles, log them in
@@ -51,6 +155,11 @@ new #[Layout('layouts.guest')] class extends Component
     // Redirect to the dashboard
     $this->redirect(route('admin.dashboard', absolute: false), navigate: true);
 }
+
+// end new reg
+
+
+
 
 }; ?>
 

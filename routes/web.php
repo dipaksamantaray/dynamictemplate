@@ -18,6 +18,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\RolesController;
 
+// Route::group(['domain'=>config('tenancy.central_domains.0')],function(){
 
 Route::view('/', 'welcome');
 Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
@@ -58,6 +59,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     
 
 })->middleware(['auth', 'verified']);
+// });
 
 // for chart(graph)
 Route::get('/json-data-feed', [DataFeedController::class, 'getDataFeed'])->name('json_data_feed');

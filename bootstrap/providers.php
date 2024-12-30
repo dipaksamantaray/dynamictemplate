@@ -10,4 +10,10 @@ return [
     App\Providers\ConsoleServiceProvider::class,
     App\Providers\PassportServiceProvider::class, 
     App\Providers\MiddlewareServiceProvider::class,
+    // for tenancy
+    App\Providers\TenancyServiceProvider::class,
+    // Stancl\Tenancy\TenancyServiceProvider::class,
+
+
+
 ];

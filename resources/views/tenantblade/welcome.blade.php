@@ -28,7 +28,7 @@
                     </header>
 
                     <main class="mt-6">
-                        <h1 style="color: black">this is the domain</h1>
+                        <h1 style="color: black">wellcome to the subdomain</h1>
 
                         <div class="grid gap-6 lg:grid-cols-2 lg:gap-8">
                             <a

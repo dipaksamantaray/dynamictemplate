@@ -17,10 +17,12 @@ use App\Http\Livewire\RoleCreate;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\RolesController;
+use App\Http\Controllers\Auth\EmailVerificationController;
 
-// Route::group(['domain'=>config('tenancy.central_domains.0')],function(){
+Route::group(['domain'=>config('tenancy.central_domains.0')],function(){
 
 Route::view('/', 'welcome');
+
 Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -56,10 +58,13 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('admins/create', AdminsCreate::class)->name('admins.create');
     Route::get('admins/{admin}/edit', AdminsEdit::class)->name('admins.edit');
 
-    
+    Route::get('/email/verify', [EmailVerificationController::class, 'show'])->name('verification.notice');
+    Route::post('/email/resend', [EmailVerificationController::class, 'resend'])->name('verification.resend');
+
 
 })->middleware(['auth', 'verified']);
-// });
+
+});
 
 // for chart(graph)
 Route::get('/json-data-feed', [DataFeedController::class, 'getDataFeed'])->name('json_data_feed');

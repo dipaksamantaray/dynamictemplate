@@ -77,6 +77,64 @@ new #[Layout('layouts.guest')] class extends Component
 // }
 
 // end new reg
+// public function register(): void
+// {
+//     $validated = $this->validate([
+//         'name' => ['required', 'string', 'max:255'],
+//         'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+//         'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+//     ]);
+
+//     // Hash the password before saving
+//     $validated['password'] = Hash::make($validated['password']);
+
+//     // Create the user
+//     $user = User::create($validated);
+//     $user->assignRole('developer');
+
+//     // Create a tenant for the user using Stancl's Tenancy
+//     $tenantId = strtolower($validated['name']); // Convert name to lowercase for consistency
+//     $domain = "{$tenantId}.app.localhost"; // Create a subdomain (e.g., app.dipak)
+
+//     // Create the tenant
+//     $tenant = Tenant::create([
+//         'id' => $tenantId,
+//         'name' => $validated['name'],
+//         'email' => $validated['email'],
+//         'password' => $validated['password'], // Store hashed password
+//         'data' => [],
+//     ]);
+
+//     // Attach the domain to the tenant
+//     $tenant->domains()->create([
+//         'domain' => $domain,
+//     ]);
+
+//     // Send the email verification notification
+//     $user->sendEmailVerificationNotification();
+
+//     // Log the user in temporarily
+//     Auth::login($user);
+
+//     // Immediately check if the email is verified
+//     if (!$user->hasVerifiedEmail()) {
+//         // Logout the user
+//         Auth::logout();
+
+//         // Invalidate the session and regenerate the CSRF token
+//         request()->session()->invalidate();
+//         request()->session()->regenerateToken();
+
+//         // Redirect to the email verification notice
+//         $this->redirect(route('verification.notice'));
+
+//         return; // Prevent further execution
+//     }
+
+//     // If the email is verified, redirect to the dashboard or another page
+//     $this->redirect(route('dashboard'));
+// }
+
 public function register(): void
 {
     $validated = $this->validate([
@@ -85,63 +143,91 @@ public function register(): void
         'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
     ]);
 
-    // Hash the password before saving
     $validated['password'] = Hash::make($validated['password']);
 
-    // Create the user
     $user = User::create($validated);
     $user->assignRole('developer');
 
-    // Create a tenant for the user using Stancl's Tenancy
-    $tenantId = strtolower($validated['name']); // Convert name to lowercase for consistency
-    $domain = "{$tenantId}.app.localhost"; // Create a subdomain (e.g., app.dipak)
+    $tenantId = strtolower($validated['name']);
+    $domain = "{$tenantId}.app.localhost";
 
-    // Create the tenant
     $tenant = Tenant::create([
         'id' => $tenantId,
         'name' => $validated['name'],
         'email' => $validated['email'],
-        'password' => $validated['password'], // Store hashed password
+        'password' => $validated['password'],
         'data' => [],
     ]);
 
-    // Attach the domain to the tenant
     $tenant->domains()->create([
         'domain' => $domain,
     ]);
 
-    // Send the email verification notification
+    // Send email verification notification
     $user->sendEmailVerificationNotification();
 
     // Log the user in temporarily
     Auth::login($user);
 
-    // Immediately check if the email is verified
+    // Check if the email is verified
     if (!$user->hasVerifiedEmail()) {
-        // Logout the user
         Auth::logout();
-
-        // Invalidate the session and regenerate the CSRF token
         request()->session()->invalidate();
         request()->session()->regenerateToken();
 
-        // Redirect to the email verification notice
         $this->redirect(route('verification.notice'));
-
-        return; // Prevent further execution
+        return;
     }
 
-    // If the email is verified, redirect to the dashboard or another page
+    // Redirect verified users
     $this->redirect(route('dashboard'));
 }
 
+// public function register(): void
+// {
+//     $validated = $this->validate([
+//         'name' => ['required', 'string', 'max:255'],
+//         'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
+//         'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+//     ]);
 
+//     $validated['password'] = Hash::make($validated['password']);
+
+//     // Create the user
+//     $user = User::create($validated);
+//     $user->assignRole('developer'); // Assign default role
+
+//     // Create a tenant and attach domain
+//     $tenantId = strtolower($validated['name']); // Ensure lowercase for consistency
+//     $domain = "{$tenantId}.app.localhost"; // Subdomain structure
+
+//     $tenant = Tenant::create([
+//         'id' => $tenantId,
+//         'name' => $validated['name'],
+//         'email' => $validated['email'],
+//         'password' => $validated['password'], // Store hashed password
+//         'data' => [],
+//     ]);
+
+//     $tenant->domains()->create([
+//         'domain' => $domain,
+//     ]);
+
+//     // Send email verification
+//     $user->sendEmailVerificationNotification();
+
+//     // Log the user in
+//     Auth::login($user);
+
+//     // Redirect to email verification notice
+//     $this->redirect(route('verification.notice'));
+// }
 
 
 }; ?>
 
 <div>
-    <form wire:submit="register">
+    <form wire:submit.prevent="register">
         <!-- Name -->
         <div>
             <x-input-label for="name" :value="__('Name')" />
@@ -159,34 +245,37 @@ public function register(): void
         <!-- Password -->
         <div class="mt-4">
             <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input wire:model="password" id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
+            <x-text-input wire:model="password" id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
         <!-- Confirm Password -->
         <div class="mt-4">
             <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input wire:model="password_confirmation" id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
+            <x-text-input wire:model="password_confirmation" id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
+        <!-- Register Button with Loading State -->
         <div class="flex items-center justify-end mt-4">
             <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}" wire:navigate>
                 {{ __('Already registered?') }}
             </a>
 
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
+            <!-- Button -->
+            <x-primary-button class="ms-4 relative flex justify-center items-center" wire:loading.attr="disabled" style="width: 100px; height: 40px;">
+                <!-- Text visible when not loading -->
+                <span wire:loading.remove class="absolute">{{ __('Register') }}</span>
+
+                <!-- Loader visible when loading -->
+                <span wire:loading class="absolute">
+                    <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                    </svg>
+                </span>
             </x-primary-button>
         </div>
     </form>
 </div>
+

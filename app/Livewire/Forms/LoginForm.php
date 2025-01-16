@@ -80,13 +80,58 @@ class LoginForm extends Form
 //     // Step 8: Clear the rate limiter and allow login if roles exist
 //     RateLimiter::clear($this->throttleKey());
 // }
+// public function authenticate(): void
+// {
+//     // Step 1: Ensure the user is not rate-limited
+//     $this->ensureIsNotRateLimited();
+
+//     // Step 2: Attempt to authenticate the user with email and password
+//     if (!Auth::attempt($this->only(['email', 'password']), $this->remember)) {
+//         RateLimiter::hit($this->throttleKey());
+
+//         // Step 3: Throw validation error if login fails
+//         throw ValidationException::withMessages([
+//             'form.email' => trans('auth.failed'),
+//         ]);
+//     }
+
+//     // Step 4: Get the authenticated user
+//     $user = Auth::user();
+
+//     // Step 5: Check if the user's email is verified
+//     if (!$user->hasVerifiedEmail()) {
+//         // Log out the user
+//         Auth::logout();
+
+//         // Return an error message
+//         throw ValidationException::withMessages([
+//             'form.email' => 'Your email address is not verified. Please verify your email to continue.',
+//         ]);
+//     }
+
+//     // Step 6: Load the user's roles
+//     $user->load('roles');
+
+//     // Step 7: Check if the user has any roles
+//     if ($user->roles->isEmpty()) {
+//         // Log out the user
+//         Auth::logout();
+
+//         // Deny access with a 403 Forbidden error
+//         abort(403, 'You are not authorized to login.');
+//     }
+
+//     // Step 8: Clear the rate limiter and allow login if all checks pass
+//     RateLimiter::clear($this->throttleKey());
+// }
+
 public function authenticate(): void
 {
     // Step 1: Ensure the user is not rate-limited
     $this->ensureIsNotRateLimited();
 
     // Step 2: Attempt to authenticate the user with email and password
-    if (! Auth::attempt($this->only(['email', 'password']), $this->remember)) {
+    if (!Auth::attempt($this->only(['email', 'password']), $this->remember)) {
         RateLimiter::hit($this->throttleKey());
 
         // Step 3: Throw validation error if login fails
@@ -98,23 +143,33 @@ public function authenticate(): void
     // Step 4: Get the authenticated user
     $user = Auth::user();
 
-    // Step 5: Load the user's roles
-    $user->load('roles');
-
-    // Step 6: Check if the user has any roles
-    if ($user->roles->isEmpty()) {
-        // Step 7: Logout the user
+    // Step 5: Check if the user's email is verified
+    if (!$user->hasVerifiedEmail()) {
+        // Log out the user
+        $user->sendEmailVerificationNotification();
         Auth::logout();
 
-        // Step 8: Deny access with a 403 Forbidden error
+        // Return an error message
+        throw ValidationException::withMessages([
+            'form.email' => 'Your email address is not verified. Please verify your email to continue.',
+        ]);
+    }
+
+    // Step 6: Load the user's roles
+    $user->load('roles');
+
+    // Step 7: Check if the user has any roles
+    if ($user->roles->isEmpty()) {
+        // Log out the user
+        Auth::logout();
+
+        // Deny access with a 403 Forbidden error
         abort(403, 'You are not authorized to login.');
     }
 
-    // Step 9: Clear the rate limiter and allow login if roles exist
+    // Step 8: Clear the rate limiter and allow login if all checks pass
     RateLimiter::clear($this->throttleKey());
 }
-
-
 
     /**
      * Ensure the authentication request is not rate limited.

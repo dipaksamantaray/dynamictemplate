@@ -151,7 +151,7 @@ public function authenticate(): void
 
         // Return an error message
         throw ValidationException::withMessages([
-            'form.email' => 'Your email address is not verified. Please verify your email to continue.',
+            'form.email' => 'Your email address is not verified. Please check and verify your email to continue to login.',
         ]);
     }
 
